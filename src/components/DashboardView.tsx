@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Minus, Plus, Save, Shuffle, X } from "lucide-react";
-import { DAYS, MEALS, WEEKLY_KCAL_GOAL, WEEKLY_PROTEIN_GOAL, WEEKLY_CARBS_GOAL, WEEKLY_FAT_GOAL, dayLabel } from "@/lib/constants";
+import { DAYS, MEALS, WEEKLY_KCAL_GOAL, WEEKLY_PROTEIN_GOAL, WEEKLY_CARBS_GOAL, WEEKLY_FAT_GOAL, dayLabel, recipeMatchesMeal } from "@/lib/constants";
 import type { useHousehold } from "@/hooks/useHousehold";
 import type { MealKey, Recipe } from "@/lib/types";
 
@@ -51,8 +51,10 @@ export default function DashboardView({ household, isMobile }: Props) {
     DAYS.forEach((day) => {
       next[day] = { ...next[day] };
       activeMeals.forEach((m) => {
-        if (!next[day][m.key] && recipes.length) {
-          next[day][m.key] = recipes[Math.floor(Math.random() * recipes.length)].id;
+        if (!next[day][m.key]) {
+          const pool = recipes.filter((r) => recipeMatchesMeal(r, m.key));
+          const options = pool.length ? pool : recipes;
+          if (options.length) next[day][m.key] = options[Math.floor(Math.random() * options.length)].id;
         }
       });
     });
@@ -60,8 +62,9 @@ export default function DashboardView({ household, isMobile }: Props) {
   };
 
   const swapForComodin = (day: string, mealKey: MealKey) => {
-    const pool = recipes.filter((r) => r.tags.includes("Comodín"));
-    const list = pool.length ? pool : recipes;
+    const matching = recipes.filter((r) => recipeMatchesMeal(r, mealKey));
+    const pool = matching.filter((r) => r.tags.includes("Comodín"));
+    const list = pool.length ? pool : matching.length ? matching : recipes;
     if (!list.length) return;
     assignRecipe(day, mealKey, list[Math.floor(Math.random() * list.length)].id);
   };
@@ -256,7 +259,7 @@ export default function DashboardView({ household, isMobile }: Props) {
         >
           <div onClick={(e) => e.stopPropagation()} style={{ width: "100%", maxWidth: 460, maxHeight: "70vh", overflow: "auto", background: "#fff", borderRadius: 18, padding: 20 }}>
             <div style={{ fontSize: 16, fontWeight: 800, marginBottom: 14 }}>Elegí una receta</div>
-            {recipes.map((r) => (
+            {recipes.filter((r) => recipeMatchesMeal(r, pickerSlot.mealKey)).map((r) => (
               <div
                 key={r.id}
                 onClick={() => {

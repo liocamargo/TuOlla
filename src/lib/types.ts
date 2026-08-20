@@ -1,5 +1,7 @@
 export type MealKey = "desayuno" | "almuerzo" | "merienda" | "cena";
 
+export type MealGroup = "comida" | "desayuno_merienda";
+
 export interface Recipe {
   id: string;
   title: string;
@@ -11,6 +13,8 @@ export interface Recipe {
   fat: number;
   tags: string[];
   kind: string;
+  // Optional for recipes created before this field existed — treated as compatible with any meal.
+  mealGroup?: MealGroup;
   description?: string;
   ingredients?: { name: string; qty: string }[];
   isCustom?: boolean;

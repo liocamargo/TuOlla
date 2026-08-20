@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { LayoutGrid, List, Plus, X } from "lucide-react";
-import { GLUTEN_KEYWORDS, RECIPE_KINDS, TAG_COLORS, neutralChipStyle, chipStyle } from "@/lib/constants";
+import { GLUTEN_KEYWORDS, MEAL_GROUP_SHORT_LABEL, MEAL_GROUPS, RECIPE_KINDS, TAG_COLORS, neutralChipStyle, chipStyle } from "@/lib/constants";
 import type { useHousehold } from "@/hooks/useHousehold";
-import type { Recipe } from "@/lib/types";
+import type { MealGroup, Recipe } from "@/lib/types";
 
 interface Props {
   household: ReturnType<typeof useHousehold>;
@@ -22,6 +22,7 @@ export default function RecipesView({ household, isMobile }: Props) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [tag, setTag] = useState("Saladas");
+  const [mealGroup, setMealGroup] = useState<MealGroup>("comida");
   const [ingredients, setIngredients] = useState<{ name: string; qty: string }[]>([{ name: "", qty: "" }]);
 
   const filtered = recipes.filter(
@@ -37,6 +38,7 @@ export default function RecipesView({ household, isMobile }: Props) {
     setTitle("");
     setDescription("");
     setTag("Saladas");
+    setMealGroup("comida");
     setIngredients([{ name: "", qty: "" }]);
   };
 
@@ -57,6 +59,7 @@ export default function RecipesView({ household, isMobile }: Props) {
       fat: 12,
       tags,
       kind: tag,
+      mealGroup,
       img: null,
       isCustom: true,
     };
@@ -66,6 +69,9 @@ export default function RecipesView({ household, isMobile }: Props) {
   };
 
   const selected = selectedId ? recipes.find((r) => r.id === selectedId) || null : null;
+
+  const metaLabel = (r: Recipe) =>
+    `${r.time} min · ${r.kcal} kcal${r.mealGroup ? ` · ${MEAL_GROUP_SHORT_LABEL[r.mealGroup]}` : ""}`;
 
   const tagChip = (t: string) => (
     <span
@@ -123,7 +129,7 @@ export default function RecipesView({ household, isMobile }: Props) {
               <div style={{ padding: 14 }}>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 10 }}>{r.tags.map(tagChip)}</div>
                 <div style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 6, lineHeight: 1.3 }}>{r.title}</div>
-                <div style={{ fontSize: 12.5, color: "oklch(50% 0.01 90)" }}>{r.time} min · {r.kcal} kcal</div>
+                <div style={{ fontSize: 12.5, color: "oklch(50% 0.01 90)" }}>{metaLabel(r)}</div>
               </div>
             </div>
           ))}
@@ -137,7 +143,7 @@ export default function RecipesView({ household, isMobile }: Props) {
                 <div style={{ fontSize: 14.5, fontWeight: 700, marginBottom: 4 }}>{r.title}</div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>{r.tags.map(tagChip)}</div>
               </div>
-              <div style={{ fontSize: 12.5, color: "oklch(50% 0.01 90)", whiteSpace: "nowrap" }}>{r.time} min · {r.kcal} kcal</div>
+              <div style={{ fontSize: 12.5, color: "oklch(50% 0.01 90)", whiteSpace: "nowrap" }}>{metaLabel(r)}</div>
             </div>
           ))}
         </div>
@@ -180,6 +186,15 @@ export default function RecipesView({ household, isMobile }: Props) {
           placeholder="Ej: Tarta de calabaza"
           style={{ width: "100%", padding: "11px 12px", borderRadius: 10, border: "1.5px solid oklch(90% 0.005 90)", fontSize: 14, marginBottom: 16 }}
         />
+
+        <label style={{ fontSize: 12, fontWeight: 700, color: "oklch(40% 0.01 90)", display: "block", marginBottom: 6 }}>¿Para qué comida es?</label>
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 16 }}>
+          {MEAL_GROUPS.map((g) => (
+            <button key={g.value} onClick={() => setMealGroup(g.value)} style={chipStyle(mealGroup === g.value, 210)}>
+              {g.label}
+            </button>
+          ))}
+        </div>
 
         <label style={{ fontSize: 12, fontWeight: 700, color: "oklch(40% 0.01 90)", display: "block", marginBottom: 6 }}>Ingredientes</label>
         {ingredients.map((ing, i) => (
@@ -272,7 +287,7 @@ export default function RecipesView({ household, isMobile }: Props) {
             <>
               <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginBottom: 12 }}>{selected.tags.map(tagChip)}</div>
               <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 8 }}>{selected.title}</div>
-              <div style={{ fontSize: 13.5, color: "oklch(50% 0.01 90)", marginBottom: 20 }}>{selected.time} min · {selected.kcal} kcal</div>
+              <div style={{ fontSize: 13.5, color: "oklch(50% 0.01 90)", marginBottom: 20 }}>{metaLabel(selected)}</div>
 
               {!!selected.ingredients?.length && (
                 <>
