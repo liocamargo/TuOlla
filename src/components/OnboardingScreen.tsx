@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { X } from "lucide-react";
 import { ALLERGY_OPTIONS, DIET_OPTIONS, DISLIKE_SUGGESTIONS, ONBOARDING_STEPS, chipStyle } from "@/lib/constants";
 import type { HouseholdSettings } from "@/lib/types";
 
@@ -164,13 +165,14 @@ export default function OnboardingScreen({ settings, onComplete }: Props) {
                       width: 18,
                       height: 18,
                       borderRadius: "50%",
-                      fontSize: 11,
                       cursor: "pointer",
-                      lineHeight: 1,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                       padding: 0,
                     }}
                   >
-                    ✕
+                    <X size={10} />
                   </button>
                 </span>
               ))}

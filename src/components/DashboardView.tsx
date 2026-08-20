@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Minus, Plus, Save, Shuffle, X } from "lucide-react";
 import { DAYS, MEALS, WEEKLY_KCAL_GOAL, WEEKLY_PROTEIN_GOAL, WEEKLY_CARBS_GOAL, WEEKLY_FAT_GOAL, dayLabel } from "@/lib/constants";
 import type { useHousehold } from "@/hooks/useHousehold";
 import type { MealKey, Recipe } from "@/lib/types";
@@ -78,19 +79,19 @@ export default function DashboardView({ household, isMobile }: Props) {
               <div style={{ fontSize: 14.5, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{recipe.title}</div>
               <div style={{ fontSize: 12, color: "oklch(50% 0.01 90)" }}>{recipe.time} min · {recipe.kcal} kcal</div>
             </div>
-            <button onClick={() => assignRecipe(day, mealKey, null)} style={{ border: "none", background: "none", fontSize: 15, cursor: "pointer", flex: "none", color: "oklch(45% 0.01 90)", display: "flex", padding: 4 }}>
-              ✕
+            <button onClick={() => assignRecipe(day, mealKey, null)} style={{ border: "none", background: "none", cursor: "pointer", flex: "none", color: "oklch(45% 0.01 90)", display: "flex", padding: 4 }}>
+              <X size={15} />
             </button>
-            <button onClick={() => swapForComodin(day, mealKey)} style={{ border: "none", background: "none", fontSize: 15, cursor: "pointer", flex: "none", color: "oklch(45% 0.01 90)", display: "flex", padding: 4 }}>
-              ⇄
+            <button onClick={() => swapForComodin(day, mealKey)} style={{ border: "none", background: "none", cursor: "pointer", flex: "none", color: "oklch(45% 0.01 90)", display: "flex", padding: 4 }}>
+              <Shuffle size={15} />
             </button>
           </>
         ) : (
           <button
             onClick={() => setPickerSlot({ day, mealKey })}
-            style={{ flex: 1, textAlign: "left", border: "none", background: "none", fontSize: 14, fontWeight: 700, color: "oklch(45% 0.01 90)", cursor: "pointer", padding: "8px 0" }}
+            style={{ flex: 1, textAlign: "left", border: "none", background: "none", display: "flex", alignItems: "center", gap: 6, fontSize: 14, fontWeight: 700, color: "oklch(45% 0.01 90)", cursor: "pointer", padding: "8px 0" }}
           >
-            + Añadir receta
+            <Plus size={15} /> Añadir receta
           </button>
         )}
       </div>
@@ -117,10 +118,10 @@ export default function DashboardView({ household, isMobile }: Props) {
           </div>
           <button
             onClick={() => setShowSaveTemplate(true)}
-            style={{ padding: 9, border: "1.5px solid oklch(80% 0.005 90)", borderRadius: 9, background: "#fff", color: "oklch(20% 0 0)", cursor: "pointer" }}
+            style={{ padding: 9, border: "1.5px solid oklch(80% 0.005 90)", borderRadius: 9, background: "#fff", color: "oklch(20% 0 0)", cursor: "pointer", display: "flex" }}
             title="Guardar plantilla"
           >
-            💾
+            <Save size={16} />
           </button>
           <button onClick={autoFillWeek} style={{ padding: "9px 16px", border: "1.5px solid oklch(20% 0 0)", borderRadius: 9, background: "oklch(20% 0 0)", color: "#fff", fontWeight: 700, fontSize: 13, cursor: "pointer", whiteSpace: "nowrap" }}>
             Autocompletar
@@ -137,9 +138,9 @@ export default function DashboardView({ household, isMobile }: Props) {
               </button>
               <button
                 onClick={() => deleteTemplate(tpl.id)}
-                style={{ border: "none", background: "oklch(88% 0.005 90)", color: "oklch(30% 0.01 90)", width: 16, height: 16, borderRadius: "50%", fontSize: 9, cursor: "pointer", lineHeight: 1, padding: 0 }}
+                style={{ border: "none", background: "oklch(88% 0.005 90)", color: "oklch(30% 0.01 90)", width: 16, height: 16, borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", padding: 0 }}
               >
-                ✕
+                <X size={9} />
               </button>
             </div>
           ))}
@@ -191,11 +192,11 @@ export default function DashboardView({ household, isMobile }: Props) {
                 <span style={{ fontSize: 12.5, color: "oklch(45% 0.02 95)", fontWeight: 600 }}>
                   Para {focusedDayServings} {focusedDayServings === 1 ? "persona" : "personas"}
                 </span>
-                <button onClick={() => setDayServings(Math.max(1, focusedDayServings - 1))} style={{ border: "none", background: "oklch(100% 0 0 / 0.6)", width: 20, height: 20, borderRadius: "50%", fontSize: 13, cursor: "pointer" }}>
-                  −
+                <button onClick={() => setDayServings(Math.max(1, focusedDayServings - 1))} style={{ border: "none", background: "oklch(100% 0 0 / 0.6)", width: 20, height: 20, borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Minus size={12} />
                 </button>
-                <button onClick={() => setDayServings(focusedDayServings + 1)} style={{ border: "none", background: "oklch(100% 0 0 / 0.6)", width: 20, height: 20, borderRadius: "50%", fontSize: 13, cursor: "pointer" }}>
-                  +
+                <button onClick={() => setDayServings(focusedDayServings + 1)} style={{ border: "none", background: "oklch(100% 0 0 / 0.6)", width: 20, height: 20, borderRadius: "50%", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Plus size={12} />
                 </button>
               </div>
             </div>

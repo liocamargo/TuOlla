@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LayoutGrid, List, Plus, X } from "lucide-react";
 import { GLUTEN_KEYWORDS, RECIPE_KINDS, TAG_COLORS, neutralChipStyle, chipStyle } from "@/lib/constants";
 import type { useHousehold } from "@/hooks/useHousehold";
 import type { Recipe } from "@/lib/types";
@@ -94,8 +95,8 @@ export default function RecipesView({ household, isMobile }: Props) {
             style={{ width: 150, padding: "8px 12px", borderRadius: 10, border: "1.5px solid oklch(90% 0.005 90)", fontSize: 13, outline: "none", background: "oklch(99% 0.002 90)" }}
           />
           <div style={{ display: "flex", gap: 2, background: "oklch(95% 0.003 90)", borderRadius: 12, padding: 4 }}>
-            <button onClick={() => setView("grid")} style={{ border: "none", background: view === "grid" ? "#fff" : "transparent", padding: 8, borderRadius: 9, cursor: "pointer", boxShadow: view === "grid" ? "0 1px 3px oklch(0% 0 0 / 0.12)" : "none" }}>▦</button>
-            <button onClick={() => setView("list")} style={{ border: "none", background: view === "list" ? "#fff" : "transparent", padding: 8, borderRadius: 9, cursor: "pointer", boxShadow: view === "list" ? "0 1px 3px oklch(0% 0 0 / 0.12)" : "none" }}>☰</button>
+            <button onClick={() => setView("grid")} style={{ border: "none", background: view === "grid" ? "#fff" : "transparent", padding: 8, borderRadius: 9, cursor: "pointer", display: "flex", boxShadow: view === "grid" ? "0 1px 3px oklch(0% 0 0 / 0.12)" : "none" }}><LayoutGrid size={17} /></button>
+            <button onClick={() => setView("list")} style={{ border: "none", background: view === "list" ? "#fff" : "transparent", padding: 8, borderRadius: 9, cursor: "pointer", display: "flex", boxShadow: view === "list" ? "0 1px 3px oklch(0% 0 0 / 0.12)" : "none" }}><List size={17} /></button>
           </div>
         </div>
       </div>
@@ -144,9 +145,9 @@ export default function RecipesView({ household, isMobile }: Props) {
 
       <button
         onClick={() => setShowAddModal(true)}
-        style={{ position: "fixed", bottom: 32, right: 32, width: 56, height: 56, borderRadius: "50%", border: "none", background: "oklch(20% 0 0)", color: "#fff", fontSize: 26, fontWeight: 700, cursor: "pointer", zIndex: 20 }}
+        style={{ position: "fixed", bottom: 32, right: 32, width: 56, height: 56, borderRadius: "50%", border: "none", background: "oklch(20% 0 0)", color: "#fff", cursor: "pointer", zIndex: 20, display: "flex", alignItems: "center", justifyContent: "center" }}
       >
-        +
+        <Plus size={26} />
       </button>
 
       {showAddModal && (
@@ -195,16 +196,16 @@ export default function RecipesView({ household, isMobile }: Props) {
               placeholder="Cantidad"
               style={{ flex: 1, minWidth: 0, padding: "9px 10px", borderRadius: 9, border: "1.5px solid oklch(90% 0.005 90)", fontSize: 13.5 }}
             />
-            <button onClick={() => setIngredients((prev) => prev.filter((_, idx) => idx !== i))} style={{ border: "none", background: "oklch(95% 0.005 90)", width: 34, borderRadius: 9, fontSize: 13, cursor: "pointer", flex: "none" }}>
-              ✕
+            <button onClick={() => setIngredients((prev) => prev.filter((_, idx) => idx !== i))} style={{ border: "none", background: "oklch(95% 0.005 90)", width: 34, borderRadius: 9, cursor: "pointer", flex: "none", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <X size={13} />
             </button>
           </div>
         ))}
         <button
           onClick={() => setIngredients((prev) => [...prev, { name: "", qty: "" }])}
-          style={{ width: "100%", border: "1.5px dashed oklch(85% 0.005 90)", background: "none", color: "oklch(20% 0 0)", fontWeight: 700, fontSize: 13, cursor: "pointer", padding: "10px 0", borderRadius: 9, marginBottom: 16 }}
+          style={{ width: "100%", border: "1.5px dashed oklch(85% 0.005 90)", background: "none", color: "oklch(20% 0 0)", fontWeight: 700, fontSize: 13, cursor: "pointer", padding: "10px 0", borderRadius: 9, marginBottom: 16, display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}
         >
-          + Agregar ingrediente
+          <Plus size={14} /> Agregar ingrediente
         </button>
 
         <label style={{ fontSize: 12, fontWeight: 700, color: "oklch(40% 0.01 90)", display: "block", marginBottom: 6 }}>Descripción</label>
@@ -265,7 +266,7 @@ export default function RecipesView({ household, isMobile }: Props) {
             onClick={() => setSelectedId(null)}
             style={{ border: "none", background: "oklch(95% 0.005 90)", width: 28, height: 28, borderRadius: "50%", cursor: "pointer", marginBottom: 14, display: "flex", alignItems: "center", justifyContent: "center" }}
           >
-            ✕
+            <X size={13} />
           </button>
           {selected && (
             <>

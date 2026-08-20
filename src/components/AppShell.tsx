@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import type { User } from "firebase/auth";
+import { CalendarDays, ChevronLeft, ChevronRight, CookingPot, ShoppingCart } from "lucide-react";
 import type { useHousehold } from "@/hooks/useHousehold";
 import DashboardView from "./DashboardView";
 import ShoppingView from "./ShoppingView";
@@ -118,7 +119,7 @@ export default function AppShell({ user, household, householdId, onLogout }: Pro
                 justifyContent: "center",
               }}
             >
-              {collapsed ? "›" : "‹"}
+              {collapsed ? <ChevronRight size={14} /> : <ChevronLeft size={14} />}
             </button>
           </div>
         )}
@@ -198,31 +199,8 @@ export default function AppShell({ user, household, householdId, onLogout }: Pro
 }
 
 function NavIcon({ k, color }: { k: Screen; color: string }) {
-  if (k === "dashboard")
-    return (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flex: "none" }}>
-        <rect x="2" y="4" width="16" height="14" rx="2" stroke={color} strokeWidth="1.6" />
-        <line x1="2" y1="8" x2="18" y2="8" stroke={color} strokeWidth="1.6" />
-        <line x1="6" y1="2" x2="6" y2="5.5" stroke={color} strokeWidth="1.6" />
-        <line x1="14" y1="2" x2="14" y2="5.5" stroke={color} strokeWidth="1.6" />
-      </svg>
-    );
-  if (k === "shopping")
-    return (
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flex: "none" }}>
-        <rect x="3" y="3" width="14" height="14" rx="1" stroke={color} strokeWidth="1.6" />
-        <line x1="6" y1="7.5" x2="14" y2="7.5" stroke={color} strokeWidth="1.6" />
-        <line x1="6" y1="10.5" x2="14" y2="10.5" stroke={color} strokeWidth="1.6" />
-        <line x1="6" y1="13.5" x2="11" y2="13.5" stroke={color} strokeWidth="1.6" />
-      </svg>
-    );
-  return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flex: "none" }}>
-      <rect x="4" y="9" width="12" height="8" rx="1.5" stroke={color} strokeWidth="1.6" />
-      <line x1="1" y1="11" x2="4" y2="11" stroke={color} strokeWidth="1.6" />
-      <line x1="16" y1="11" x2="19" y2="11" stroke={color} strokeWidth="1.6" />
-      <line x1="4" y1="6.5" x2="16" y2="6.5" stroke={color} strokeWidth="1.6" />
-      <circle cx="10" cy="4" r="1.1" stroke={color} strokeWidth="1.6" />
-    </svg>
-  );
+  const style = { flex: "none" as const };
+  if (k === "dashboard") return <CalendarDays size={20} color={color} style={style} />;
+  if (k === "shopping") return <ShoppingCart size={20} color={color} style={style} />;
+  return <CookingPot size={20} color={color} style={style} />;
 }

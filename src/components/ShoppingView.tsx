@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { LayoutGrid, List, Plus, Trash2 } from "lucide-react";
 import { AISLE_EMOJI, neutralChipStyle } from "@/lib/constants";
 import type { useHousehold } from "@/hooks/useHousehold";
 import type { ShoppingItem } from "@/lib/types";
@@ -49,7 +50,7 @@ export default function ShoppingView({ household, isMobile, collapsed }: Props) 
         {it.name}
       </div>
       <button onClick={() => deleteShoppingItem(it.id)} style={{ border: "none", background: "none", color: "oklch(60% 0.01 90)", cursor: "pointer", flex: "none", display: "flex", padding: 2 }}>
-        🗑
+        <Trash2 size={15} />
       </button>
       <input type="checkbox" checked={it.checked} onChange={(e) => toggleShoppingItem(it.id, e.target.checked)} style={{ width: 18, height: 18, accentColor: "oklch(20% 0 0)", cursor: "pointer", flex: "none" }} />
     </div>
@@ -60,11 +61,11 @@ export default function ShoppingView({ household, isMobile, collapsed }: Props) 
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 16, flexWrap: "wrap", marginBottom: 20 }}>
         <h1 style={{ margin: 0, fontSize: 26, fontWeight: 800 }}>Lista de compras</h1>
         <div style={{ display: "flex", gap: 2, background: "oklch(95% 0.003 90)", borderRadius: 12, padding: 4 }}>
-          <button onClick={() => setViewMode("categoria")} style={{ border: "none", background: viewMode === "categoria" ? "#fff" : "transparent", padding: 8, borderRadius: 9, cursor: "pointer", boxShadow: viewMode === "categoria" ? "0 1px 3px oklch(0% 0 0 / 0.12)" : "none" }}>
-            ▦
+          <button onClick={() => setViewMode("categoria")} style={{ border: "none", background: viewMode === "categoria" ? "#fff" : "transparent", padding: 8, borderRadius: 9, cursor: "pointer", display: "flex", boxShadow: viewMode === "categoria" ? "0 1px 3px oklch(0% 0 0 / 0.12)" : "none" }}>
+            <LayoutGrid size={17} />
           </button>
-          <button onClick={() => setViewMode("junto")} style={{ border: "none", background: viewMode === "junto" ? "#fff" : "transparent", padding: 8, borderRadius: 9, cursor: "pointer", boxShadow: viewMode === "junto" ? "0 1px 3px oklch(0% 0 0 / 0.12)" : "none" }}>
-            ☰
+          <button onClick={() => setViewMode("junto")} style={{ border: "none", background: viewMode === "junto" ? "#fff" : "transparent", padding: 8, borderRadius: 9, cursor: "pointer", display: "flex", boxShadow: viewMode === "junto" ? "0 1px 3px oklch(0% 0 0 / 0.12)" : "none" }}>
+            <List size={17} />
           </button>
         </div>
       </div>
@@ -100,8 +101,8 @@ export default function ShoppingView({ household, isMobile, collapsed }: Props) 
                     placeholder="Agregar item..."
                     style={{ flex: 1, padding: "8px 10px", borderRadius: 8, border: "1.5px solid oklch(90% 0.005 90)", fontSize: 13 }}
                   />
-                  <button onClick={() => submitToAisle(aisle)} style={{ border: "none", background: "oklch(95% 0.005 90)", borderRadius: 8, padding: "8px 14px", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                    + Agregar
+                  <button onClick={() => submitToAisle(aisle)} style={{ border: "none", background: "oklch(95% 0.005 90)", borderRadius: 8, padding: "8px 14px", fontSize: 13, fontWeight: 700, cursor: "pointer", display: "flex", alignItems: "center", gap: 4 }}>
+                    <Plus size={14} /> Agregar
                   </button>
                 </div>
               </div>
@@ -155,8 +156,8 @@ export default function ShoppingView({ household, isMobile, collapsed }: Props) 
               <option key={a} value={a}>{AISLE_EMOJI[a]} {a}</option>
             ))}
           </select>
-          <button onClick={submitGeneral} style={{ flex: "none", padding: "11px 18px", border: "none", borderRadius: 10, background: "oklch(20% 0 0)", color: "#fff", fontWeight: 800, fontSize: 14, cursor: "pointer", whiteSpace: "nowrap" }}>
-            + Agregar
+          <button onClick={submitGeneral} style={{ flex: "none", padding: "11px 18px", border: "none", borderRadius: 10, background: "oklch(20% 0 0)", color: "#fff", fontWeight: 800, fontSize: 14, cursor: "pointer", whiteSpace: "nowrap", display: "flex", alignItems: "center", gap: 6 }}>
+            <Plus size={15} /> Agregar
           </button>
         </div>
       </div>
