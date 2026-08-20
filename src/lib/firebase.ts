@@ -1,6 +1,6 @@
-import { initializeApp, getApps, getApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { initializeApp, getApps, getApp, type FirebaseApp } from "firebase/app";
+import { getAuth, type Auth } from "firebase/auth";
+import { getFirestore, type Firestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -12,6 +12,23 @@ const firebaseConfig = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-export const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
+let app: FirebaseApp | undefined;
+let authInstance: Auth | undefined;
+let dbInstance: Firestore | undefined;
+
+// Lazily initialized so the module can be imported during server-side
+// build/prerender without Firebase touching the (possibly unset) config.
+function getFirebaseApp(): FirebaseApp {
+  if (!app) app = getApps().length ? getApp() : initializeApp(firebaseConfig);
+  return app;
+}
+
+export function getFirebaseAuth(): Auth {
+  if (!authInstance) authInstance = getAuth(getFirebaseApp());
+  return authInstance;
+}
+
+export function getFirebaseDb(): Firestore {
+  if (!dbInstance) dbInstance = getFirestore(getFirebaseApp());
+  return dbInstance;
+}

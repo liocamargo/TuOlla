@@ -7,7 +7,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import type { User } from "firebase/auth";
-import { db } from "./firebase";
+import { getFirebaseDb } from "./firebase";
 import { SEED_RECIPES, SEED_SHOPPING_ITEMS, emptyWeekPlan } from "./constants";
 
 /**
@@ -15,6 +15,7 @@ import { SEED_RECIPES, SEED_SHOPPING_ITEMS, emptyWeekPlan } from "./constants";
  * default data) on first login, or joining a pending invite if present.
  */
 export async function bootstrapHousehold(user: User): Promise<string> {
+  const db = getFirebaseDb();
   const userRef = doc(db, "users", user.uid);
   const userSnap = await getDoc(userRef);
   const existingHouseholdId = userSnap.data()?.householdId as string | undefined;
@@ -75,6 +76,7 @@ export async function bootstrapHousehold(user: User): Promise<string> {
 }
 
 export async function inviteHousemate(householdId: string, invitedBy: string, email: string) {
+  const db = getFirebaseDb();
   const normalized = email.trim().toLowerCase();
   await setDoc(doc(db, "invites", normalized), {
     householdId,

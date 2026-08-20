@@ -12,7 +12,7 @@ import {
   query,
   orderBy,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { getFirebaseDb } from "@/lib/firebase";
 import { emptyWeekPlan } from "@/lib/constants";
 import type {
   HouseholdSettings,
@@ -45,6 +45,7 @@ export function useHousehold(householdId: string | null) {
 
   useEffect(() => {
     if (!householdId) return;
+    const db = getFirebaseDb();
 
     const unsubs = [
       onSnapshot(doc(db, "households", householdId, "settings", "main"), (snap) => {
@@ -77,7 +78,7 @@ export function useHousehold(householdId: string | null) {
   const updateSettings = useCallback(
     (patch: Partial<HouseholdSettings>) => {
       if (!householdId) return;
-      void updateDoc(doc(db, "households", householdId, "settings", "main"), patch);
+      void updateDoc(doc(getFirebaseDb(), "households", householdId, "settings", "main"), patch);
     },
     [householdId]
   );
@@ -86,7 +87,7 @@ export function useHousehold(householdId: string | null) {
     (next: WeekPlan) => {
       if (!householdId) return;
       setPlanState(next);
-      void setDoc(doc(db, "households", householdId, "plan", "week"), next);
+      void setDoc(doc(getFirebaseDb(), "households", householdId, "plan", "week"), next);
     },
     [householdId]
   );
@@ -102,7 +103,7 @@ export function useHousehold(householdId: string | null) {
   const addRecipe = useCallback(
     async (recipe: Omit<Recipe, "id">) => {
       if (!householdId) return;
-      await addDoc(collection(db, "households", householdId, "recipes"), recipe);
+      await addDoc(collection(getFirebaseDb(), "households", householdId, "recipes"), recipe);
     },
     [householdId]
   );
@@ -110,7 +111,7 @@ export function useHousehold(householdId: string | null) {
   const toggleShoppingItem = useCallback(
     (id: string, checked: boolean) => {
       if (!householdId) return;
-      void updateDoc(doc(db, "households", householdId, "shoppingItems", id), { checked });
+      void updateDoc(doc(getFirebaseDb(), "households", householdId, "shoppingItems", id), { checked });
     },
     [householdId]
   );
@@ -118,7 +119,7 @@ export function useHousehold(householdId: string | null) {
   const deleteShoppingItem = useCallback(
     (id: string) => {
       if (!householdId) return;
-      void deleteDoc(doc(db, "households", householdId, "shoppingItems", id));
+      void deleteDoc(doc(getFirebaseDb(), "households", householdId, "shoppingItems", id));
     },
     [householdId]
   );
@@ -126,7 +127,7 @@ export function useHousehold(householdId: string | null) {
   const addShoppingItem = useCallback(
     async (item: Omit<ShoppingItem, "id" | "checked">) => {
       if (!householdId) return;
-      await addDoc(collection(db, "households", householdId, "shoppingItems"), {
+      await addDoc(collection(getFirebaseDb(), "households", householdId, "shoppingItems"), {
         ...item,
         checked: false,
       });
@@ -137,7 +138,7 @@ export function useHousehold(householdId: string | null) {
   const saveTemplate = useCallback(
     async (name: string) => {
       if (!householdId) return;
-      await addDoc(collection(db, "households", householdId, "templates"), {
+      await addDoc(collection(getFirebaseDb(), "households", householdId, "templates"), {
         name,
         plan,
         createdAt: Date.now(),
@@ -158,7 +159,7 @@ export function useHousehold(householdId: string | null) {
   const deleteTemplate = useCallback(
     (templateId: string) => {
       if (!householdId) return;
-      void deleteDoc(doc(db, "households", householdId, "templates", templateId));
+      void deleteDoc(doc(getFirebaseDb(), "households", householdId, "templates", templateId));
     },
     [householdId]
   );

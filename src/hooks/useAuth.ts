@@ -11,7 +11,7 @@ import {
   signOut,
   type User,
 } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { getFirebaseAuth } from "@/lib/firebase";
 import { bootstrapHousehold } from "@/lib/household";
 
 const PENDING_EMAIL_KEY = "tuolla:pendingEmail";
@@ -24,7 +24,7 @@ export function useAuth() {
   const [magicLinkSent, setMagicLinkSent] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(getFirebaseAuth(), async (firebaseUser) => {
       setUser(firebaseUser);
       if (firebaseUser) {
         try {
@@ -43,7 +43,7 @@ export function useAuth() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (!isSignInWithEmailLink(auth, window.location.href)) return;
+    if (!isSignInWithEmailLink(getFirebaseAuth(), window.location.href)) return;
 
     let email = window.localStorage.getItem(PENDING_EMAIL_KEY);
     if (!email) {
@@ -51,7 +51,7 @@ export function useAuth() {
     }
     if (!email) return;
 
-    signInWithEmailLink(auth, email, window.location.href)
+    signInWithEmailLink(getFirebaseAuth(), email, window.location.href)
       .then(() => {
         window.localStorage.removeItem(PENDING_EMAIL_KEY);
         window.history.replaceState(null, "", window.location.pathname);
@@ -62,7 +62,7 @@ export function useAuth() {
   const loginWithGoogle = useCallback(async () => {
     setError(null);
     try {
-      await signInWithPopup(auth, new GoogleAuthProvider());
+      await signInWithPopup(getFirebaseAuth(), new GoogleAuthProvider());
     } catch (e) {
       setError(e instanceof Error ? e.message : "No se pudo iniciar sesión con Google.");
     }
@@ -71,7 +71,7 @@ export function useAuth() {
   const sendMagicLink = useCallback(async (email: string) => {
     setError(null);
     try {
-      await sendSignInLinkToEmail(auth, email, {
+      await sendSignInLinkToEmail(getFirebaseAuth(), email, {
         url: window.location.href,
         handleCodeInApp: true,
       });
@@ -85,7 +85,7 @@ export function useAuth() {
   const resetMagicLinkSent = useCallback(() => setMagicLinkSent(false), []);
 
   const logout = useCallback(async () => {
-    await signOut(auth);
+    await signOut(getFirebaseAuth());
   }, []);
 
   return {
