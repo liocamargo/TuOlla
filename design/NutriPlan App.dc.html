@@ -1,0 +1,1165 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;-webkit-font-smoothing:antialiased;font-family:'Manrope',system-ui,sans-serif}
+*{box-sizing:border-box}
+a{color:oklch(20% 0 0);text-decoration:underline}
+a:hover{color:oklch(40% 0 0)}
+::placeholder{color:oklch(62% 0.01 90)}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:oklch(98% 0.004 90);color:oklch(20% 0.01 90)">
+
+<sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 16px">
+  <div style="width:100%;max-width:420px;background:#fff;border:1px solid oklch(91% 0.005 90);border-radius:20px;padding:40px 32px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:28px">
+      <div style="width:10px;height:10px;border-radius:3px;background:oklch(20% 0 0)"></div>
+      <span style="font-size:13px;font-weight:700;letter-spacing:0.04em;color:oklch(50% 0.01 90);text-transform:uppercase">NutriPlan</span>
+    </div>
+    <h1 style="margin:0 0 6px;font-size:26px;font-weight:800">Iniciar sesión</h1>
+    <p style="margin:0 0 28px;font-size:14.5px;color:oklch(50% 0.01 90);line-height:1.5">Entrá para armar tu menú semanal.</p>
+
+    <button onClick="{{ loginWithGoogle }}" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px;border-radius:12px;border:1.5px solid oklch(88% 0.005 90);background:#fff;font-size:14.5px;font-weight:700;cursor:pointer;color:oklch(20% 0.01 90);margin-bottom:18px">
+      <svg width="18" height="18" viewBox="0 0 48 48" style="flex:none"><path fill="#4285F4" d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"></path><path fill="#34A853" d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.86-12.32-9.05H4.34v5.7C7.96 41.07 15.4 46 24 46z"></path><path fill="#FBBC05" d="M11.68 28.2c-.44-1.32-.69-2.72-.69-4.2s.25-2.88.69-4.2v-5.7H4.34C2.85 16.98 2 20.36 2 24s.85 7.02 2.34 9.9l7.34-5.7z"></path><path fill="#EA4335" d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2 15.4 2 7.96 6.93 4.34 14.1l7.34 5.7c1.74-5.19 6.59-9.05 12.32-9.05z"></path></svg>
+      Continuar con Google
+    </button>
+
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
+      <div style="flex:1;height:1px;background:oklch(90% 0.005 90)"></div>
+      <span style="font-size:12px;color:oklch(55% 0.01 90)">o</span>
+      <div style="flex:1;height:1px;background:oklch(90% 0.005 90)"></div>
+    </div>
+
+    <label style="font-size:12px;font-weight:700;color:oklch(40% 0.01 90);display:block;margin-bottom:6px">Email</label>
+    <input value="{{ emailInput }}" onChange="{{ onEmailChange }}" placeholder="tu@email.com" style="width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid oklch(90% 0.005 90);font-size:14px;font-family:inherit;outline:none;background:oklch(99% 0.002 90);margin-bottom:16px">
+    <button onClick="{{ sendCode }}" style="width:100%;padding:13px;border:none;border-radius:12px;background:oklch(20% 0 0);color:#fff;font-size:14.5px;font-weight:800;cursor:pointer">Enviar código por email</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isEmailCode }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 16px">
+  <div style="width:100%;max-width:420px;background:#fff;border:1px solid oklch(91% 0.005 90);border-radius:20px;padding:40px 32px">
+    <h1 style="margin:0 0 6px;font-size:24px;font-weight:800">Revisá tu email</h1>
+    <p style="margin:0 0 26px;font-size:14.5px;color:oklch(50% 0.01 90);line-height:1.5">Enviamos un código de 6 dígitos a <strong>{{ emailInput }}</strong>.</p>
+    <label style="font-size:12px;font-weight:700;color:oklch(40% 0.01 90);display:block;margin-bottom:6px">Código</label>
+    <input value="{{ emailCodeInput }}" onChange="{{ onCodeChange }}" placeholder="000000" style="width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid oklch(90% 0.005 90);font-size:18px;letter-spacing:0.3em;text-align:center;font-family:inherit;outline:none;background:oklch(99% 0.002 90);margin-bottom:18px">
+    <button onClick="{{ verifyCode }}" style="width:100%;padding:13px;border:none;border-radius:12px;background:oklch(20% 0 0);color:#fff;font-size:14.5px;font-weight:800;cursor:pointer;margin-bottom:14px">Verificar</button>
+    <button onClick="{{ backToLogin }}" style="width:100%;padding:6px;border:none;background:none;font-size:13px;color:oklch(50% 0.01 90);cursor:pointer;text-decoration:underline">Volver</button>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isOnboarding }}" hint-placeholder-val="{{ false }}">
+<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px 16px">
+  <div style="width:100%;max-width:600px;background:#fff;border:1px solid oklch(91% 0.005 90);border-radius:20px;padding:40px 36px">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:24px">
+      <sc-for list="{{ stepDots }}" as="dot" hint-placeholder-count="3">
+        <div style="{{ dot.style }}"></div>
+      </sc-for>
+      <span style="font-size:12.5px;color:oklch(55% 0.01 90);margin-left:8px">{{ stepLabel }}</span>
+    </div>
+
+    <sc-if value="{{ isStepDiet }}" hint-placeholder-val="{{ true }}">
+      <h1 style="margin:0 0 8px;font-size:28px;font-weight:800;line-height:1.15">¡Personalicemos tu menú!</h1>
+      <p style="margin:0 0 28px;font-size:15px;color:oklch(50% 0.01 90);line-height:1.5">¿Qué tipo de dieta seguís?</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px">
+        <sc-for list="{{ dietChips }}" as="chip" hint-placeholder-count="3">
+          <button onClick="{{ chip.onClick }}" style="{{ chip.style }}">{{ chip.label }}</button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStepAllergy }}" hint-placeholder-val="{{ false }}">
+      <h1 style="margin:0 0 8px;font-size:28px;font-weight:800;line-height:1.15">¿Alguna alergia o intolerancia?</h1>
+      <p style="margin:0 0 28px;font-size:15px;color:oklch(50% 0.01 90);line-height:1.5">Elegí todas las que correspondan.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px">
+        <sc-for list="{{ allergyChips }}" as="chip" hint-placeholder-count="2">
+          <button onClick="{{ chip.onClick }}" style="{{ chip.style }}">{{ chip.label }}</button>
+        </sc-for>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isStepDislikes }}" hint-placeholder-val="{{ false }}">
+      <h1 style="margin:0 0 8px;font-size:28px;font-weight:800;line-height:1.15">¿Algo que no te guste?</h1>
+      <p style="margin:0 0 28px;font-size:15px;color:oklch(50% 0.01 90);line-height:1.5">Buscá ingredientes para excluirlos de tus recetas.</p>
+      <div style="position:relative;margin-bottom:8px">
+        <input value="{{ dislikeInput }}" onChange="{{ onDislikeInput }}" placeholder="Buscar un ingrediente..." style="width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid oklch(90% 0.005 90);font-size:14px;font-family:inherit;outline:none;background:oklch(99% 0.002 90)">
+        <sc-if value="{{ showSuggestions }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute;left:0;right:0;top:calc(100% + 4px);background:#fff;border:1px solid oklch(90% 0.005 90);border-radius:12px;z-index:5;overflow:hidden">
+            <sc-for list="{{ filteredSuggestions }}" as="sug" hint-placeholder-count="3">
+              <div onClick="{{ sug.onClick }}" style="padding:10px 14px;font-size:14px;cursor:pointer;border-bottom:1px solid oklch(95% 0.003 90)">{{ sug.label }}</div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:14px">
+          <sc-for list="{{ dislikeChipsList }}" as="d" hint-placeholder-count="0">
+            <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 8px 6px 12px;border-radius:999px;background:oklch(94% 0.005 90);font-size:13px;font-weight:600;color:oklch(30% 0.01 90)">
+              {{ d.label }}
+              <button onClick="{{ d.onRemove }}" style="border:none;background:oklch(88% 0.005 90);color:oklch(30% 0.01 90);width:18px;height:18px;border-radius:50%;font-size:11px;cursor:pointer;line-height:1;padding:0">✕</button>
+            </span>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <div style="display:flex;justify-content:space-between;margin-top:32px">
+      <button onClick="{{ prevStep }}" style="{{ prevButtonStyle }}">Atrás</button>
+      <button onClick="{{ nextStep }}" style="padding:14px 26px;border:none;border-radius:14px;background:oklch(20% 0 0);color:#fff;font-size:15px;font-weight:800;cursor:pointer">{{ nextButtonLabel }}</button>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ isApp }}" hint-placeholder-val="{{ false }}">
+<div style="{{ shellStyle }}">
+  <nav style="{{ navStyle }}">
+    <div style="{{ navBrandRowStyle }}">
+      <div style="{{ navBrandStyle }}">
+        <div style="width:10px;height:10px;border-radius:3px;background:oklch(20% 0 0);flex:none"></div>
+        <span style="{{ navBrandLabelStyle }}">NutriPlan</span>
+        <span style="{{ betaTagStyle }}">Beta</span>
+      </div>
+      <sc-if value="{{ showCollapseToggle }}" hint-placeholder-val="{{ false }}">
+        <button onClick="{{ toggleNavCollapsed }}" style="border:none;background:oklch(95% 0.005 90);width:26px;height:26px;border-radius:8px;cursor:pointer;flex:none;color:oklch(30% 0.01 90);display:flex;align-items:center;justify-content:center">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="1.5"></rect><line x1="9" y1="4" x2="9" y2="20" stroke="currentColor" stroke-width="1.5"></line></svg>
+        </button>
+      </sc-if>
+    </div>
+    <div style="{{ navRightGroupStyle }}">
+      <div style="{{ navItemsWrapStyle }}">
+        <button onClick="{{ dashboardNav.onClick }}" style="{{ dashboardNav.style }}">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex:none"><rect x="2" y="4" width="16" height="14" rx="2" stroke="{{ dashboardNav.iconColor }}" stroke-width="1.6"></rect><line x1="2" y1="8" x2="18" y2="8" stroke="{{ dashboardNav.iconColor }}" stroke-width="1.6"></line><line x1="6" y1="2" x2="6" y2="5.5" stroke="{{ dashboardNav.iconColor }}" stroke-width="1.6"></line><line x1="14" y1="2" x2="14" y2="5.5" stroke="{{ dashboardNav.iconColor }}" stroke-width="1.6"></line></svg>
+          <span style="{{ navLabelStyle }}">Menú semanal</span>
+        </button>
+        <button onClick="{{ shoppingNav.onClick }}" style="{{ shoppingNav.style }}">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex:none"><rect x="3" y="3" width="14" height="14" rx="1" stroke="{{ shoppingNav.iconColor }}" stroke-width="1.6"></rect><line x1="6" y1="7.5" x2="14" y2="7.5" stroke="{{ shoppingNav.iconColor }}" stroke-width="1.6"></line><line x1="6" y1="10.5" x2="14" y2="10.5" stroke="{{ shoppingNav.iconColor }}" stroke-width="1.6"></line><line x1="6" y1="13.5" x2="11" y2="13.5" stroke="{{ shoppingNav.iconColor }}" stroke-width="1.6"></line></svg>
+          <span style="{{ navLabelStyle }}">Compras</span>
+        </button>
+        <button onClick="{{ recipesNav.onClick }}" style="{{ recipesNav.style }}">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style="flex:none"><rect x="4" y="9" width="12" height="8" rx="1.5" stroke="{{ recipesNav.iconColor }}" stroke-width="1.6"></rect><line x1="1" y1="11" x2="4" y2="11" stroke="{{ recipesNav.iconColor }}" stroke-width="1.6"></line><line x1="16" y1="11" x2="19" y2="11" stroke="{{ recipesNav.iconColor }}" stroke-width="1.6"></line><line x1="4" y1="6.5" x2="16" y2="6.5" stroke="{{ recipesNav.iconColor }}" stroke-width="1.6"></line><circle cx="10" cy="4" r="1.1" stroke="{{ recipesNav.iconColor }}" stroke-width="1.6"></circle></svg>
+          <span style="{{ navLabelStyle }}">Recetas</span>
+        </button>
+      </div>
+      <sc-if value="{{ showProfile }}" hint-placeholder-val="{{ false }}">
+        <div onClick="{{ goToAccount }}" style="{{ profileRowStyle }}">
+          <div style="width:32px;height:32px;border-radius:50%;background:oklch(20% 0 0);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:none">{{ profileInitial }}</div>
+          <div style="{{ navLabelStyle }};min-width:0">
+            <div style="font-size:13px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ profileName }}</div>
+            <div style="font-size:11.5px;color:oklch(55% 0.01 90);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ profileEmail }}</div>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </nav>
+
+  <main style="{{ mainStyle }}">
+
+    <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ false }}">
+      <div style="width:100%">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:20px">
+          <div>
+            <h1 style="margin:0 0 4px;font-size:26px;font-weight:800">Tu semana</h1>
+            <p style="margin:0;color:oklch(50% 0.01 90);font-size:14px">{{ filledSlotsLabel }}</p>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+            <div style="display:flex;gap:6px;border:1.5px solid oklch(88% 0.005 90);border-radius:10px;padding:4px">
+              <button onClick="{{ selectDiaMode }}" style="{{ diaModeBtnStyle }}">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.5"></rect><line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" stroke-width="1.5"></line><line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line><line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line><text x="12" y="17.5" font-size="7" font-weight="700" text-anchor="middle" fill="currentColor" stroke="none">1</text></svg>
+              </button>
+              <button onClick="{{ selectTodosMode }}" style="{{ todosModeBtnStyle }}">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><rect x="5" y="6" width="16" height="15" rx="2" stroke="currentColor" stroke-width="1.5"></rect><rect x="2" y="3" width="16" height="15" rx="2" fill="#fff" stroke="currentColor" stroke-width="1.5"></rect><line x1="2" y1="8" x2="18" y2="8" stroke="currentColor" stroke-width="1.5"></line><line x1="6" y1="1" x2="6" y2="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line><line x1="14" y1="1" x2="14" y2="5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></line></svg>
+              </button>
+            </div>
+            <button onClick="{{ openSaveTemplate }}" style="padding:9px;border:1.5px solid oklch(80% 0.005 90);border-radius:9px;background:#fff;color:oklch(20% 0 0);cursor:pointer;display:flex" title="Guardar plantilla">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M4 5a2 2 0 012-2h5l2 2h7a2 2 0 012 2v2H4V5z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><path d="M4 9h18v9a2 2 0 01-2 2H6a2 2 0 01-2-2V9z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><path d="M10 13v7l2.5-2 2.5 2v-7" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path></svg>
+            </button>
+            <button onClick="{{ autoFillWeek }}" style="padding:9px 16px;border:1.5px solid oklch(20% 0 0);border-radius:9px;background:oklch(20% 0 0);color:#fff;font-weight:700;font-size:13px;cursor:pointer;white-space:nowrap">Autocompletar</button>
+          </div>
+        </div>
+
+        <sc-if value="{{ hasTemplates }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:20px">
+            <span style="font-size:12.5px;font-weight:700;color:oklch(50% 0.01 90)">Tus plantillas:</span>
+            <sc-for list="{{ templateChips }}" as="tpl" hint-placeholder-count="0">
+              <div style="display:inline-flex;align-items:center;gap:6px;padding:6px 6px 6px 12px;border-radius:999px;background:oklch(95% 0.005 90);font-size:12.5px;font-weight:700">
+                <button onClick="{{ tpl.onApply }}" style="border:none;background:none;font-weight:700;font-size:12.5px;cursor:pointer;color:oklch(20% 0 0)">{{ tpl.label }}</button>
+                <button onClick="{{ tpl.onDelete }}" style="border:none;background:oklch(88% 0.005 90);color:oklch(30% 0.01 90);width:16px;height:16px;border-radius:50%;font-size:9px;cursor:pointer;line-height:1;padding:0">✕</button>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ weekIncomplete }}" hint-placeholder-val="{{ true }}">
+          <div style="margin-bottom:16px;padding:14px 20px;background:#fff;border:1px solid oklch(92% 0.005 90);border-radius:14px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px">
+              <span style="font-size:12.5px;font-weight:700;color:oklch(40% 0.01 90)">Semana armada</span>
+              <span style="font-size:12.5px;color:oklch(55% 0.01 90)">{{ weekProgressLabel }}</span>
+            </div>
+            <div style="height:8px;border-radius:999px;background:oklch(94% 0.005 90);overflow:hidden">
+              <div style="{{ weekProgressBarStyle }}"></div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isDiaMode }}" hint-placeholder-val="{{ true }}">
+          <div style="{{ postItStyle }}">
+            
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0 8px">
+              <div style="font-size: 18px; font-weight: 800; color: oklch(20% 0 0)">{{ heroDayLabel }}</div>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="font-size:12.5px;color:oklch(45% 0.02 95);font-weight:600">{{ focusedDayServingsLabel }}</span>
+                <button onClick="{{ decServings }}" style="border:none;background:oklch(100% 0 0 / 0.6);width:20px;height:20px;border-radius:50%;font-size:13px;cursor:pointer;line-height:1">−</button>
+                <button onClick="{{ incServings }}" style="border:none;background:oklch(100% 0 0 / 0.6);width:20px;height:20px;border-radius:50%;font-size:13px;cursor:pointer;line-height:1">+</button>
+              </div>
+            </div>
+            <sc-for list="{{ heroMeals }}" as="hm" hint-placeholder-count="0">
+              <div style="{{ hm.rowStyle }}">
+                <div style="{{ hm.rowLabelStyle }}">{{ hm.mealLabel }}</div>
+                <sc-if value="{{ hm.hasRecipe }}" hint-placeholder-val="{{ false }}">
+                  <div style="flex:1;min-width:0">
+                    <div style="{{ hm.titleStyle }}">{{ hm.title }}</div>
+                    <div style="{{ hm.metaTextStyle }}">{{ hm.metaLabel }}</div>
+                  </div>
+                  <button onClick="{{ hm.onDelete }}" style="{{ hm.swapBtnStyle }}">
+                    <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M8 6V4h4v2M6 6l1 11h6l1-11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  </button>
+                  <button onClick="{{ hm.onSwap }}" style="{{ hm.swapBtnStyle }}">
+                    <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M3 10a7 7 0 0111.5-5.3M17 10a7 7 0 01-11.5 5.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M14.5 4.7 15 8l3-1M5.5 15.3 5 12l-3 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  </button>
+                </sc-if>
+                <sc-if value="{{ hm.empty }}" hint-placeholder-val="{{ true }}">
+                  <button onClick="{{ hm.onAdd }}" style="{{ hm.addBtnStyle }}">+ Añadir receta</button>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <div style="margin-top:14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px">
+            <div style="padding:14px 16px;background:#fff;border:1px solid oklch(92% 0.005 90);border-radius:14px">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="color:oklch(55% 0.01 90);margin-bottom:6px"><path d="M10 2c-3 4-5 6-5 9.5A5 5 0 0010 17a5 5 0 005-5.5C15 8 13 6 10 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg>
+              <div style="font-size:11.5px;color:oklch(50% 0.01 90);margin-bottom:4px">Calorías de {{ heroDayLabel }}</div>
+              <div style="font-size:16px;font-weight:800">{{ heroDayKcalLabel }}</div>
+            </div>
+            <div style="padding:14px 16px;background:#fff;border:1px solid oklch(92% 0.005 90);border-radius:14px">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="color:oklch(55% 0.01 90);margin-bottom:6px"><rect x="4" y="9" width="12" height="8" rx="2" stroke="currentColor" stroke-width="1.4"></rect><path d="M7 9V6a3 3 0 016 0v3" stroke="currentColor" stroke-width="1.4"></path></svg>
+              <div style="font-size:11.5px;color:oklch(50% 0.01 90);margin-bottom:4px">Proteínas</div>
+              <div style="font-size:16px;font-weight:800">{{ heroProteinLabel }}</div>
+            </div>
+            <div style="padding:14px 16px;background:#fff;border:1px solid oklch(92% 0.005 90);border-radius:14px">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="color:oklch(55% 0.01 90);margin-bottom:6px"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.4"></circle><path d="M10 3v14M3 10h14" stroke="currentColor" stroke-width="1.4"></path></svg>
+              <div style="font-size:11.5px;color:oklch(50% 0.01 90);margin-bottom:4px">Carbohidratos</div>
+              <div style="font-size:16px;font-weight:800">{{ heroCarbsLabel }}</div>
+            </div>
+            <div style="padding:14px 16px;background:#fff;border:1px solid oklch(92% 0.005 90);border-radius:14px">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" style="color:oklch(55% 0.01 90);margin-bottom:6px"><path d="M10 2c-3 4-5 6-5 9.5A5 5 0 0010 17a5 5 0 005-5.5C15 8 13 6 10 2z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg>
+              <div style="font-size:11.5px;color:oklch(50% 0.01 90);margin-bottom:4px">Grasas</div>
+              <div style="font-size:16px;font-weight:800">{{ heroFatLabel }}</div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isTodosMode }}" hint-placeholder-val="{{ false }}">
+          <sc-for list="{{ allDaysCards }}" as="dc" hint-placeholder-count="0">
+            <div style="background:#fff;border:1px solid oklch(90% 0.005 90);border-radius:16px;padding:6px 20px;width:100%;margin-bottom:16px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 0 8px">
+                <div style="font-size:14px;font-weight:800;color:oklch(20% 0 0)">{{ dc.dayLabel }}</div>
+                <span style="font-size:12.5px;color:oklch(45% 0.02 95);font-weight:600">{{ dc.servingsLabel }}</span>
+              </div>
+              <sc-for list="{{ dc.meals }}" as="hm" hint-placeholder-count="0">
+                <div style="{{ hm.rowStyle }}">
+                  <div style="{{ hm.rowLabelStyle }}">{{ hm.mealLabel }}</div>
+                  <sc-if value="{{ hm.hasRecipe }}" hint-placeholder-val="{{ false }}">
+                    <div style="flex:1;min-width:0">
+                      <div style="{{ hm.titleStyle }}">{{ hm.title }}</div>
+                      <div style="{{ hm.metaTextStyle }}">{{ hm.metaLabel }}</div>
+                    </div>
+                    <button onClick="{{ hm.onDelete }}" style="{{ hm.swapBtnStyle }}">
+                      <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M8 6V4h4v2M6 6l1 11h6l1-11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </button>
+                    <button onClick="{{ hm.onSwap }}" style="{{ hm.swapBtnStyle }}">
+                      <svg width="15" height="15" viewBox="0 0 20 20" fill="none"><path d="M3 10a7 7 0 0111.5-5.3M17 10a7 7 0 01-11.5 5.3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M14.5 4.7 15 8l3-1M5.5 15.3 5 12l-3 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </button>
+                  </sc-if>
+                  <sc-if value="{{ hm.empty }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ hm.onAdd }}" style="{{ hm.addBtnStyle }}">+ Añadir receta</button>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </sc-for>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ showPicker }}" hint-placeholder-val="{{ false }}">
+      <div onClick="{{ closePicker }}" style="position:fixed;inset:0;background:oklch(20% 0 0 / 0.45);display:flex;align-items:center;justify-content:center;z-index:30;padding:20px">
+        <div onClick="{{ stopClick }}" style="width:100%;max-width:460px;max-height:70vh;overflow:auto;background:#fff;border-radius:18px;padding:20px">
+          <div style="font-size:16px;font-weight:800;margin-bottom:14px">Elegí una receta</div>
+          <sc-for list="{{ pickerRecipes }}" as="pr" hint-placeholder-count="0">
+            <div onClick="{{ pr.onSelect }}" style="display:flex;align-items:center;gap:12px;padding:8px;border-radius:10px;cursor:pointer">
+              <div style="{{ pr.thumbStyle }}"></div>
+              <div style="flex:1;min-width:0">
+                <div style="font-size:14px;font-weight:700">{{ pr.title }}</div>
+                <div style="font-size:12px;color:oklch(50% 0.01 90)">{{ pr.metaLabel }}</div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isShopping }}" hint-placeholder-val="{{ false }}">
+      <div style="width:100%">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+          <h1 style="margin:0;font-size:26px;font-weight:800">Lista de compras</h1>
+          <div style="display:flex;gap:2px;background:oklch(95% 0.003 90);border-radius:12px;padding:4px">
+            <button onClick="{{ selectCategoryView }}" style="{{ categoryViewBtnStyle }}">
+              <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><rect x="1" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.4"></rect><rect x="10" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.4"></rect><rect x="1" y="10" width="6" height="6" stroke="currentColor" stroke-width="1.4"></rect><rect x="10" y="10" width="6" height="6" stroke="currentColor" stroke-width="1.4"></rect></svg>
+            </button>
+            <button onClick="{{ selectFlatView }}" style="{{ flatViewBtnStyle }}">
+              <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><line x1="1" y1="3" x2="16" y2="3" stroke="currentColor" stroke-width="1.6"></line><line x1="1" y1="8.5" x2="16" y2="8.5" stroke="currentColor" stroke-width="1.6"></line><line x1="1" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="1.6"></line></svg>
+            </button>
+          </div>
+        </div>
+
+
+
+
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px">
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ aisleFilterChips }}" as="fc" hint-placeholder-count="4">
+              <button onClick="{{ fc.onClick }}" style="{{ fc.style }}">{{ fc.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ isByCategory }}" hint-placeholder-val="{{ true }}">
+          <sc-for list="{{ aisleGroups }}" as="group" hint-placeholder-count="0">
+            <div style="margin-bottom:22px;background:#fff;border:1px solid oklch(92% 0.005 90);border-radius:14px;overflow:hidden">
+              <div style="font-size:14px;font-weight:800;padding:14px 16px;border-bottom:1px solid oklch(93% 0.005 90)">{{ group.emoji }} {{ group.aisle }}</div>
+              <div>
+                <sc-for list="{{ group.items }}" as="it" hint-placeholder-count="0">
+                  <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid oklch(95% 0.003 90)">
+                    <div style="font-size:13px;color:oklch(55% 0.01 90);flex:none;width:44px">{{ it.qty }}</div>
+                    <div style="flex:1;font-size:14px;{{ it.textStyle }}">{{ it.name }}</div>
+                    <button onClick="{{ it.onDelete }}" style="border:none;background:none;color:oklch(60% 0.01 90);cursor:pointer;flex:none;display:flex;padding:2px">
+                      <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M8 6V4h4v2M6 6l1 11h6l1-11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    </button>
+                    <input type="checkbox" checked="{{ it.checked }}" onChange="{{ it.onToggle }}" style="width:18px;height:18px;accent-color:oklch(20% 0 0);cursor:pointer;flex:none;border-radius:50%">
+                  </div>
+                </sc-for>
+                <div style="display:flex;gap:8px;padding:10px 16px">
+                  <input value="{{ group.draftValue }}" onChange="{{ group.onDraftChange }}" placeholder="Agregar item..." style="flex:1;padding:8px 10px;border-radius:8px;border:1.5px solid oklch(90% 0.005 90);font-family:inherit;font-size:13px">
+                  <button onClick="{{ group.onAdd }}" style="border:none;background:oklch(95% 0.005 90);border-radius:8px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer">+ Agregar</button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </sc-if>
+
+        <sc-if value="{{ isFlatView }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid oklch(92% 0.005 90);border-radius:14px;overflow:hidden">
+            <sc-for list="{{ flatItems }}" as="it" hint-placeholder-count="0">
+              <div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid oklch(95% 0.003 90)">
+                <div style="font-size:13px;color:oklch(55% 0.01 90);flex:none;width:44px">{{ it.qty }}</div>
+                <div style="flex:1;font-size:14px;{{ it.textStyle }}">{{ it.name }}</div>
+                <button onClick="{{ it.onDelete }}" style="border:none;background:none;color:oklch(60% 0.01 90);cursor:pointer;flex:none;display:flex;padding:2px">
+                  <svg width="14" height="14" viewBox="0 0 20 20" fill="none"><path d="M4 6h12M8 6V4h4v2M6 6l1 11h6l1-11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                </button>
+                <input type="checkbox" checked="{{ it.checked }}" onChange="{{ it.onToggle }}" style="width:18px;height:18px;accent-color:oklch(20% 0 0);cursor:pointer;flex:none;border-radius:50%">
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ shoppingEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="text-align:center;padding:40px 0;color:oklch(55% 0.01 90);font-size:14px">{{ emptyShoppingLabel }}</div>
+        </sc-if>
+
+        <div style="{{ shoppingAddBarStyle }}">
+          <div style="{{ shoppingAddBarInnerStyle }}">
+            <input value="{{ newItemName }}" onChange="{{ onNewItemNameChange }}" onKeyDown="{{ onNewItemNameKeyDown }}" placeholder="Agregar producto..." style="{{ addItemInputStyle }}">
+            <input value="{{ newItemQty }}" onChange="{{ onNewItemQtyChange }}" type="number" min="1" placeholder="Cant." title="Cantidad" style="{{ addItemQtyStyle }}">
+            <select value="{{ newItemAisle }}" onChange="{{ onNewItemAisleChange }}" style="{{ addItemSelectStyle }}">
+              <sc-for list="{{ aisleOptions }}" as="ao" hint-placeholder-count="5">
+                <option value="{{ ao.value }}">{{ ao.label }}</option>
+              </sc-for>
+            </select>
+            <button onClick="{{ addGeneralShoppingItem }}" style="{{ addItemBtnStyle }}">+ Agregar</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isRecipes }}" hint-placeholder-val="{{ false }}">
+      <div style="width:100%;position:relative">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px">
+          <h1 style="margin:0;font-size:26px;font-weight:800">Recetario</h1>
+          <div style="display:flex;align-items:center;gap:10px">
+            <input value="{{ recipeSearch }}" onChange="{{ onRecipeSearch }}" placeholder="Buscar..." style="width:150px;padding:8px 12px;border-radius:10px;border:1.5px solid oklch(90% 0.005 90);font-size:13px;font-family:inherit;outline:none;background:oklch(99% 0.002 90)">
+            <div style="display:flex;gap:2px;background:oklch(95% 0.003 90);border-radius:12px;padding:4px">
+              <button onClick="{{ selectGridView }}" style="{{ gridViewBtnStyle }}">
+                <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><rect x="1" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.4"></rect><rect x="10" y="1" width="6" height="6" stroke="currentColor" stroke-width="1.4"></rect><rect x="1" y="10" width="6" height="6" stroke="currentColor" stroke-width="1.4"></rect><rect x="10" y="10" width="6" height="6" stroke="currentColor" stroke-width="1.4"></rect></svg>
+              </button>
+              <button onClick="{{ selectListView }}" style="{{ listViewBtnStyle }}">
+                <svg width="17" height="17" viewBox="0 0 17 17" fill="none"><line x1="1" y1="3" x2="16" y2="3" stroke="currentColor" stroke-width="1.6"></line><line x1="1" y1="8.5" x2="16" y2="8.5" stroke="currentColor" stroke-width="1.6"></line><line x1="1" y1="14" x2="16" y2="14" stroke="currentColor" stroke-width="1.6"></line></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:20px">
+          
+          <div style="display:flex;gap:8px">
+            <sc-for list="{{ kindFilterChips }}" as="kf" hint-placeholder-count="3">
+              <button onClick="{{ kf.onClick }}" style="{{ kf.style }}">{{ kf.label }}</button>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ isGridView }}" hint-placeholder-val="{{ true }}">
+          <div style="{{ recipesGridStyle }}">
+            <sc-for list="{{ recipesList }}" as="r" hint-placeholder-count="0">
+              <div onClick="{{ r.onOpen }}" style="background:#fff;border:1px solid oklch(92% 0.005 90);border-radius:16px;overflow:hidden;cursor:pointer">
+                <sc-if value="{{ r.hasImg }}" hint-placeholder-val="{{ false }}">
+                  <div style="{{ r.imgStyle }}"></div>
+                </sc-if>
+                <div style="{{ r.placeholderStyle }}">
+                  <span style="font:11px ui-monospace,monospace;color:oklch(55% 0.01 90)">foto de tu receta</span>
+                </div>
+                <div style="padding:14px">
+                  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px">
+                    <sc-for list="{{ r.tagChips }}" as="t" hint-placeholder-count="1">
+                      <span style="{{ t.style }}">{{ t.label }}</span>
+                    </sc-for>
+                  </div>
+                  <div style="font-size:14.5px;font-weight:700;margin-bottom:6px;line-height:1.3">{{ r.title }}</div>
+                  <div style="font-size:12.5px;color:oklch(50% 0.01 90)">{{ r.metaLabel }}</div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ isListView }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff;border:1px solid oklch(92% 0.005 90);border-radius:16px;overflow:hidden">
+            <sc-for list="{{ recipesList }}" as="r" hint-placeholder-count="0">
+              <div onClick="{{ r.onOpen }}" style="display:flex;align-items:center;gap:14px;padding:12px 16px;border-bottom:1px solid oklch(95% 0.003 90);cursor:pointer">
+                <div style="{{ r.listThumbStyle }}"></div>
+                <div style="flex:1;min-width:0">
+                  <div style="font-size:14.5px;font-weight:700;margin-bottom:4px">{{ r.title }}</div>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <sc-for list="{{ r.tagChips }}" as="t" hint-placeholder-count="1">
+                      <span style="{{ t.style }}">{{ t.label }}</span>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="font-size:12.5px;color:oklch(50% 0.01 90);white-space:nowrap">{{ r.metaLabel }}</div>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+
+        <button onClick="{{ openAddRecipeModal }}" style="position:fixed;bottom:32px;right:32px;width:56px;height:56px;border-radius:50%;border:none;background:oklch(20% 0 0);color:#fff;font-size:26px;font-weight:700;cursor:pointer;z-index:20">+</button>
+
+        <sc-if value="{{ showAddModal }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ closeAddRecipeModal }}" style="position:fixed;inset:0;background:oklch(20% 0 0 / 0.4);z-index:30"></div>
+        </sc-if>
+        <div style="{{ sidePanelStyle }}">
+          <div style="font-size:18px;font-weight:800;margin-bottom:18px">Añadir mi propia receta</div>
+
+          <label style="font-size:12px;font-weight:700;color:oklch(40% 0.01 90);display:block;margin-bottom:6px">Título</label>
+          <input value="{{ newRecipeTitle }}" onChange="{{ onNewTitleChange }}" placeholder="Ej: Tarta de calabaza" style="width:100%;padding:11px 12px;border-radius:10px;border:1.5px solid oklch(90% 0.005 90);font-family:inherit;font-size:14px;margin-bottom:16px">
+
+          <label style="font-size:12px;font-weight:700;color:oklch(40% 0.01 90);display:block;margin-bottom:6px">Ingredientes</label>
+          <sc-for list="{{ newRecipeIngredients }}" as="ing" hint-placeholder-count="0">
+            <div style="display:flex;gap:8px;margin-bottom:8px">
+              <input value="{{ ing.name }}" onChange="{{ ing.onNameChange }}" placeholder="Ingrediente" style="flex:2;min-width:0;padding:9px 10px;border-radius:9px;border:1.5px solid oklch(90% 0.005 90);font-family:inherit;font-size:13.5px">
+              <input value="{{ ing.qty }}" onChange="{{ ing.onQtyChange }}" placeholder="Cantidad" style="flex:1;min-width:0;padding:9px 10px;border-radius:9px;border:1.5px solid oklch(90% 0.005 90);font-family:inherit;font-size:13.5px">
+              <button onClick="{{ ing.onRemove }}" style="border:none;background:oklch(95% 0.005 90);width:34px;border-radius:9px;font-size:13px;cursor:pointer;flex:none">✕</button>
+            </div>
+          </sc-for>
+          <button onClick="{{ addIngredientRow }}" style="width:100%;border:1.5px dashed oklch(85% 0.005 90);background:none;color:oklch(20% 0 0);font-weight:700;font-size:13px;cursor:pointer;padding:10px 0;border-radius:9px;margin-bottom:16px">+ Agregar ingrediente</button>
+
+          <label style="font-size:12px;font-weight:700;color:oklch(40% 0.01 90);display:block;margin-bottom:6px">Descripción</label>
+          <textarea value="{{ newRecipeDescription }}" onChange="{{ onNewDescriptionChange }}" placeholder="Pasos o notas de preparación..." style="width:100%;min-height:80px;padding:11px 12px;border-radius:10px;border:1.5px solid oklch(90% 0.005 90);font-family:inherit;font-size:14px;margin-bottom:16px;resize:vertical"></textarea>
+
+          <label style="font-size:12px;font-weight:700;color:oklch(40% 0.01 90);display:block;margin-bottom:6px">Tipo</label>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px">
+            <sc-for list="{{ newRecipeTagChips }}" as="tc" hint-placeholder-count="4">
+              <button onClick="{{ tc.onClick }}" style="{{ tc.style }}">{{ tc.label }}</button>
+            </sc-for>
+          </div>
+          <div style="font-size:12px;color:oklch(50% 0.01 90);margin-bottom:22px">{{ tacIndicatorLabel }}</div>
+
+          <div style="display:flex;gap:10px;justify-content:flex-end">
+            <button onClick="{{ closeAddRecipeModal }}" style="padding:11px 18px;border-radius:10px;border:1.5px solid oklch(88% 0.005 90);background:#fff;font-weight:700;font-size:14px;cursor:pointer">Cancelar</button>
+            <button onClick="{{ submitNewRecipe }}" style="padding:11px 18px;border-radius:10px;border:none;background:oklch(20% 0 0);color:#fff;font-weight:800;font-size:14px;cursor:pointer">Guardar receta</button>
+          </div>
+        </div>
+
+        <sc-if value="{{ showRecipeDetail }}" hint-placeholder-val="{{ false }}">
+          <div onClick="{{ closeRecipeDetail }}" style="position:fixed;inset:0;background:oklch(20% 0 0 / 0.4);z-index:30"></div>
+        </sc-if>
+        <div style="{{ recipeDetailPanelStyle }}">
+          <sc-if value="{{ selectedRecipe.hasImg }}" hint-placeholder-val="{{ false }}">
+            <div style="{{ selectedRecipe.imgStyle }}"></div>
+          </sc-if>
+          <div style="padding:24px">
+            <button onClick="{{ closeRecipeDetail }}" style="border:none;background:oklch(95% 0.005 90);width:28px;height:28px;border-radius:50%;cursor:pointer;margin-bottom:14px;display:flex;align-items:center;justify-content:center">
+              <svg width="13" height="13" viewBox="0 0 20 20" fill="none"><path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"></path></svg>
+            </button>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px">
+              <sc-for list="{{ selectedRecipe.tagChips }}" as="t" hint-placeholder-count="1">
+                <span style="{{ t.style }}">{{ t.label }}</span>
+              </sc-for>
+            </div>
+            <div style="font-size:20px;font-weight:800;margin-bottom:8px">{{ selectedRecipe.title }}</div>
+            <div style="font-size:13.5px;color:oklch(50% 0.01 90);margin-bottom:20px">{{ selectedRecipe.metaLabel }}</div>
+
+            <sc-if value="{{ selectedRecipe.hasIngredients }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:13px;font-weight:800;margin-bottom:10px">Ingredientes</div>
+              <div style="margin-bottom:20px">
+                <sc-for list="{{ selectedRecipe.ingredientRows }}" as="ing" hint-placeholder-count="0">
+                  <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid oklch(95% 0.003 90);font-size:14px">
+                    <span>{{ ing.name }}</span>
+                    <span style="color:oklch(50% 0.01 90)">{{ ing.qty }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ selectedRecipe.hasDescription }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:13px;font-weight:800;margin-bottom:8px">Descripción</div>
+              <p style="font-size:14px;color:oklch(30% 0.01 90);line-height:1.6;white-space:pre-wrap">{{ selectedRecipe.description }}</p>
+            </sc-if>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAccount }}" hint-placeholder-val="{{ false }}">
+      <div style="width:100%;max-width:640px">
+        <h1 style="margin:0 0 6px;font-size:26px;font-weight:800">Mi cuenta</h1>
+        <p style="margin:0 0 28px;color:oklch(50% 0.01 90);font-size:14px">{{ profileEmail }}</p>
+
+        <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:oklch(50% 0.01 90);margin-bottom:12px">Qué querés planificar</div>
+        <div style="background:#fff;border:1px solid oklch(92% 0.005 90);border-radius:14px;overflow:hidden">
+          <sc-for list="{{ mealToggles }}" as="mt" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid oklch(95% 0.003 90)">
+              <span style="font-size:14.5px;font-weight:700">{{ mt.label }}</span>
+              <div onClick="{{ mt.onToggle }}" style="{{ mt.trackStyle }}">
+                <div style="{{ mt.knobStyle }}"></div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <p style="margin:14px 0 0;font-size:12.5px;color:oklch(55% 0.01 90)">Las comidas desactivadas no van a aparecer en tu semana ni en el autocompletar.</p>
+
+        <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:oklch(50% 0.01 90);margin:28px 0 12px">Personas por defecto</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <sc-for list="{{ servingsChips }}" as="sc" hint-placeholder-count="6">
+            <button onClick="{{ sc.onClick }}" style="{{ sc.style }}">{{ sc.label }}</button>
+          </sc-for>
+        </div>
+        <p style="margin:14px 0 0;font-size:12.5px;color:oklch(55% 0.01 90)">Podés cambiar la cantidad de personas para un día puntual desde el menú semanal.</p>
+
+        <div style="font-size:13px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:oklch(50% 0.01 90);margin:28px 0 12px">Compartir tu espacio</div>
+        <div style="background:#fff;border:1px solid oklch(92% 0.005 90);border-radius:14px;padding:18px 20px">
+          <p style="margin:0 0 14px;font-size:13.5px;color:oklch(40% 0.01 90);line-height:1.5">Invitá a las personas con las que vivís para que vean y editen el mismo menú, lista de compras y recetario.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">
+            <input value="{{ inviteEmail }}" onChange="{{ onInviteEmailChange }}" placeholder="email@ejemplo.com" style="flex:1;min-width:200px;padding:10px 12px;border-radius:10px;border:1.5px solid oklch(90% 0.005 90);font-family:inherit;font-size:13.5px">
+            <button onClick="{{ sendInvite }}" style="padding:10px 16px;border:none;border-radius:10px;background:oklch(20% 0 0);color:#fff;font-weight:700;font-size:13.5px;cursor:pointer;white-space:nowrap">Invitar</button>
+          </div>
+          <sc-if value="{{ hasHousemates }}" hint-placeholder-val="{{ false }}">
+            <sc-for list="{{ housemates }}" as="hm" hint-placeholder-count="0">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-top:1px solid oklch(95% 0.003 90)">
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div style="width:26px;height:26px;border-radius:50%;background:oklch(90% 0.005 90);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:oklch(30% 0.01 90)">{{ hm.initial }}</div>
+                  <span style="font-size:13.5px">{{ hm.email }}</span>
+                </div>
+                <span style="font-size:12px;color:oklch(55% 0.01 90)">{{ hm.statusLabel }}</span>
+              </div>
+            </sc-for>
+          </sc-if>
+        </div>
+      </div>
+    </sc-if>
+
+  </main>
+</div>
+</sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const DIET_OPTIONS = [
+  {value:'Omnívoro', label:'Como de todo, sin restricciones'},
+  {value:'Vegetariano', label:'Sin carne ni pescado'},
+  {value:'Vegano', label:'Sin ningún producto de origen animal'}
+];
+const ALLERGY_OPTIONS = ['Sin TACC','Sin Lactosa','Sin Frutos secos','Sin Huevo','Sin Mariscos','Sin Soja','Sin Maní','Bajo en sodio'];
+const DISLIKE_SUGGESTIONS = ['Cilantro','Berenjena','Hígado','Aceitunas','Anchoas','Coco','Comino','Rabanito','Morrón','Brócoli','Pescado','Hongos'];
+const DAYS = ['Lunes','Martes','Miércoles','Jueves','Viernes','Sábado','Domingo'];
+const MEALS = [{key:'desayuno',label:'Desayuno'},{key:'almuerzo',label:'Almuerzo'},{key:'merienda',label:'Merienda'},{key:'cena',label:'Cena'}];
+const ONBOARDING_STEPS = ['diet','allergy','dislikes'];
+const TAG_COLORS = {
+  'Vegetariano':{bg:'oklch(94% 0.03 150)',fg:'oklch(35% 0.1 150)'},
+  'Vegano':{bg:'oklch(94% 0.03 150)',fg:'oklch(35% 0.1 150)'},
+  'Comodín':{bg:'oklch(94% 0.03 50)',fg:'oklch(35% 0.1 50)'},
+  'Aprovechamiento':{bg:'oklch(94% 0.03 50)',fg:'oklch(35% 0.1 50)'},
+  'Sin TACC':{bg:'oklch(94% 0.005 90)',fg:'oklch(40% 0.005 90)'},
+  'Sin Lactosa':{bg:'oklch(94% 0.005 90)',fg:'oklch(40% 0.005 90)'}
+};
+const RECIPES = [
+  {id:1,title:'Pizza casera veggie',img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=60&auto=format',time:30,kcal:520,protein:18,carbs:60,fat:20,tags:['Vegetariano'],kind:'Saladas'},
+  {id:2,title:'Ensalada mediterránea',img:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=60&auto=format',time:10,kcal:310,protein:8,carbs:30,fat:16,tags:['Vegano','Sin TACC'],kind:'Dietas especiales'},
+  {id:3,title:'Fideos con salsa de tomate',img:'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&q=60&auto=format',time:20,kcal:480,protein:14,carbs:70,fat:14,tags:['Vegetariano'],kind:'Saladas'},
+  {id:4,title:'Tacos de pollo',img:'https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&q=60&auto=format',time:25,kcal:540,protein:32,carbs:45,fat:22,tags:['Comodín'],kind:'Saladas'},
+  {id:5,title:'Bowl de avena y frutas',img:'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&q=60&auto=format',time:10,kcal:350,protein:10,carbs:55,fat:10,tags:['Vegano'],kind:'Dulces'},
+  {id:6,title:'Salmón grillado con vegetales',img:'https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=400&q=60&auto=format',time:25,kcal:430,protein:36,carbs:12,fat:24,tags:['Sin TACC'],kind:'Saladas'},
+  {id:7,title:'Buddha bowl de garbanzos',img:'https://images.unsplash.com/photo-1543339494-b4cd4f7ba686?w=400&q=60&auto=format',time:15,kcal:420,protein:14,carbs:52,fat:16,tags:['Vegano','Comodín'],kind:'Dietas especiales'},
+  {id:8,title:'Panqueques integrales',img:'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&q=60&auto=format',time:20,kcal:390,protein:12,carbs:48,fat:14,tags:['Vegetariano'],kind:'Dulces'},
+  {id:9,title:'Poke bowl de atún',img:'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&q=60&auto=format',time:20,kcal:460,protein:28,carbs:48,fat:16,tags:['Sin TACC'],kind:'Saladas'},
+  {id:10,title:'Bife con puré de papas',img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=60&auto=format',time:35,kcal:610,protein:38,carbs:40,fat:30,tags:['Aprovechamiento'],kind:'Ocasiones especiales'}
+];
+const SHOPPING_ITEMS = [
+  {id:1,name:'Cebollas',qty:'3',aisle:'Verdulería',emoji:'🥦'},
+  {id:2,name:'Tomates',qty:'4',aisle:'Verdulería',emoji:'🥦'},
+  {id:3,name:'Lechuga',qty:'1',aisle:'Verdulería',emoji:'🥦'},
+  {id:4,name:'Zanahorias',qty:'2',aisle:'Verdulería',emoji:'🥦'},
+  {id:5,name:'Paltas',qty:'2',aisle:'Verdulería',emoji:'🥦'},
+  {id:6,name:'Pechuga de pollo',qty:'1kg',aisle:'Carnicería',emoji:'🥩'},
+  {id:7,name:'Carne picada',qty:'500g',aisle:'Carnicería',emoji:'🥩'},
+  {id:8,name:'Leche',qty:'1L',aisle:'Lácteos',emoji:'🥛'},
+  {id:9,name:'Yogures',qty:'2',aisle:'Lácteos',emoji:'🥛'},
+  {id:10,name:'Queso cremoso',qty:'1',aisle:'Lácteos',emoji:'🥛'},
+  {id:11,name:'Arroz',qty:'1kg',aisle:'Almacén',emoji:'🥫'},
+  {id:12,name:'Fideos',qty:'500g',aisle:'Almacén',emoji:'🥫'},
+  {id:13,name:'Aceite de oliva',qty:'1',aisle:'Almacén',emoji:'🥫'},
+  {id:14,name:'Garbanzos en lata',qty:'2',aisle:'Almacén',emoji:'🥫'},
+  {id:15,name:'Papel higiénico',qty:'4',aisle:'Otros',emoji:'🧺'},
+  {id:16,name:'Fósforos',qty:'1',aisle:'Otros',emoji:'🧺'}
+];
+const AISLE_EMOJI = {'Verdulería':'🥦','Carnicería':'🥩','Lácteos':'🥛','Almacén':'🥫','Otros':'🧺'};
+const DAILY_KCAL_GOAL = 2000;
+const WEEKLY_KCAL_GOAL = DAILY_KCAL_GOAL * 7;
+const WEEKLY_PROTEIN_GOAL = 700, WEEKLY_CARBS_GOAL = 1750, WEEKLY_FAT_GOAL = 455;
+
+function emptyPlan(){
+  const plan = {};
+  DAYS.forEach(d => { plan[d] = {desayuno:null, almuerzo:null, merienda:null, cena:null}; });
+  return plan;
+}
+
+const GLUTEN_KEYWORDS = ['trigo','harina','pan','fideos','pasta','tallarines','ñoquis','cebada','centeno','avena','galletitas','masa','bizcochuelo','cerveza'];
+
+function dayLabel(i){ return i===0 ? 'Hoy' : i===1 ? 'Mañana' : DAYS[i]; }
+
+function chipStyle(selected, hue){
+  return selected
+    ? `padding:9px 16px;border-radius:999px;border:none;background:oklch(58% 0.15 ${hue});color:#fff;font-weight:700;font-size:13.5px;cursor:pointer`
+    : `padding:9px 16px;border-radius:999px;border:1.5px solid oklch(88% 0.005 90);background:#fff;color:oklch(30% 0.01 90);font-weight:600;font-size:13.5px;cursor:pointer`;
+}
+
+class Component extends DCLogic {
+  state = {
+    screen: 'login',
+    emailInput: '', emailCodeInput: '',
+    onboardingStep: 0,
+    diet: 'Omnívoro',
+    allergies: [],
+    dislikes: [],
+    dislikeInput: '',
+    plan: emptyPlan(),
+    draggingId: null,
+    recipes: RECIPES,
+    shoppingItems: SHOPPING_ITEMS.map(it => ({...it, checked:false})),
+    shoppingAisleFilter: 'Todos',
+    shoppingViewMode: 'categoria',
+    newItemDrafts: {},
+    newItemName: '', newItemQty: '1', newItemAisle: 'Otros',
+    showAddModal: false,
+    newRecipeTitle: '', newRecipeDescription: '', newRecipeTag: 'Saladas',
+    newRecipeIngredients: [{name:'', qty:''}],
+    isMobile: typeof window !== 'undefined' && window.innerWidth < 900,
+    navCollapsed: false,
+    focusedDayIndex: 0,
+    dinnerFirst: false,
+    pickerSlot: null,
+    dashboardViewMode: 'dia',
+    defaultServings: 2,
+    dayServings: {},
+    inviteEmail: '', housemates: [],
+    enabledMeals: {desayuno:true, almuerzo:true, merienda:true, cena:true},
+    recipesView: 'grid',
+    recipeSearch: '', recipeKindFilter: 'Todas',
+    selectedRecipeId: null,
+  };
+
+  componentDidMount(){
+    this.updateViewport = () => this.setState({isMobile: window.innerWidth < 900});
+    window.addEventListener('resize', this.updateViewport);
+    this.setState({dinnerFirst: new Date().getHours() >= 15});
+  }
+  componentWillUnmount(){ window.removeEventListener('resize', this.updateViewport); }
+
+  loginWithGoogle(){ this.setState({screen:'onboarding'}); }
+  sendCode(){ if(!this.state.emailInput.trim()) return; this.setState({screen:'emailCode'}); }
+  verifyCode(){ this.setState({screen:'onboarding'}); }
+  backToLogin(){ this.setState({screen:'login', emailCodeInput:''}); }
+
+  setDiet(d){ this.setState({diet:d}); }
+  toggleAllergy(a){ this.setState(s => ({allergies: s.allergies.includes(a) ? s.allergies.filter(x=>x!==a) : [...s.allergies,a]})); }
+  addDislike(word){ this.setState(s => s.dislikes.includes(word) ? {dislikeInput:''} : {dislikes:[...s.dislikes,word], dislikeInput:''}); }
+  removeDislike(word){ this.setState(s => ({dislikes: s.dislikes.filter(x=>x!==word)})); }
+  nextStep(){
+    if (this.state.onboardingStep >= ONBOARDING_STEPS.length - 1) { this.setState({screen:'dashboard'}); return; }
+    this.setState(s => ({onboardingStep: s.onboardingStep + 1}));
+  }
+  prevStep(){ this.setState(s => ({onboardingStep: Math.max(0, s.onboardingStep - 1)})); }
+  setScreen(name){ this.setState({screen:name}); }
+  toggleNavCollapsed(){ this.setState(s => ({navCollapsed: !s.navCollapsed})); }
+  goToAccount(){ this.setState({screen:'account'}); }
+  setDashboardViewMode(v){ this.setState({dashboardViewMode:v}); }
+  setDefaultServings(n){ this.setState({defaultServings:n}); }
+  setDayServings(day,n){ this.setState(s => ({dayServings:{...s.dayServings,[day]:n}})); }
+  sendInvite(){
+    const email = this.state.inviteEmail.trim();
+    if (!email) return;
+    this.setState(s => ({housemates:[...s.housemates, {email, statusLabel:'Invitación enviada'}], inviteEmail:''}));
+  }
+  toggleMealEnabled(key){ this.setState(s => ({enabledMeals: {...s.enabledMeals, [key]: !s.enabledMeals[key]}})); }
+
+  handleDrop(day, mealKey){
+    const id = this.state.draggingId;
+    if (id == null) return;
+    const recipe = this.state.recipes.find(r => r.id === id);
+    if (!recipe) return;
+    this.setState(s => ({plan: {...s.plan, [day]: {...s.plan[day], [mealKey]: recipe}}, draggingId: null}));
+  }
+  removeFromSlot(day, mealKey){
+    this.setState(s => ({plan: {...s.plan, [day]: {...s.plan[day], [mealKey]: null}}}));
+  }
+  assignRecipe(day, mealKey, recipe){
+    this.setState(s => ({plan: {...s.plan, [day]: {...s.plan[day], [mealKey]: recipe}}}));
+  }
+  swapForComodin(day, mealKey){
+    const pool = this.state.recipes.filter(r => r.tags.includes('Comodín'));
+    const list = pool.length ? pool : this.state.recipes;
+    this.assignRecipe(day, mealKey, list[Math.floor(Math.random()*list.length)]);
+  }
+  focusDay(i){ this.setState({focusedDayIndex:i}); }
+  openPicker(dayIndex, mealKey){ this.setState({pickerSlot:{dayIndex, mealKey}}); }
+  closePicker(){ this.setState({pickerSlot:null}); }
+  setRecipesView(v){ this.setState({recipesView:v}); }
+  setRecipeSearch(e){ this.setState({recipeSearch:e.target.value}); }
+  setRecipeKindFilter(v){ this.setState({recipeKindFilter:v}); }
+  openRecipeDetail(id){ this.setState({selectedRecipeId:id}); }
+  closeRecipeDetail(){ this.setState({selectedRecipeId:null}); }
+  autoFillWeek(){
+    this.setState(s => {
+      const plan = {};
+      const pool = s.recipes;
+      DAYS.forEach(day => {
+        plan[day] = {...s.plan[day]};
+        MEALS.filter(m=>s.enabledMeals[m.key]).forEach(m => { plan[day][m.key] = s.plan[day][m.key] || pool[Math.floor(Math.random()*pool.length)]; });
+      });
+      return {plan};
+    });
+  }
+
+  setShoppingFilter(aisle){ this.setState({shoppingAisleFilter: aisle}); }
+  setShoppingViewMode(v){ this.setState({shoppingViewMode: v}); }
+  setNewItemDraft(aisle, value){ this.setState(s => ({newItemDrafts: {...s.newItemDrafts, [aisle]: value}})); }
+  addShoppingItem(aisle){
+    const name = (this.state.newItemDrafts[aisle] || '').trim();
+    if (!name) return;
+    const item = {id: Date.now(), name, qty:'1', aisle, emoji: AISLE_EMOJI[aisle] || '🧺', checked:false};
+    this.setState(s => ({shoppingItems:[...s.shoppingItems, item], newItemDrafts:{...s.newItemDrafts, [aisle]:''}}));
+  }
+  toggleShoppingItem(id){ this.setState(s => ({shoppingItems: s.shoppingItems.map(it => it.id===id ? {...it, checked:!it.checked} : it)})); }
+  deleteShoppingItem(id){ this.setState(s => ({shoppingItems: s.shoppingItems.filter(it=>it.id!==id)})); }
+  addGeneralShoppingItem(){
+    const name = this.state.newItemName.trim();
+    if (!name) return;
+    const aisle = this.state.newItemAisle;
+    const qty = String(this.state.newItemQty ?? '').trim() || '1';
+    const item = {id: Date.now(), name, qty, aisle, emoji: AISLE_EMOJI[aisle] || '🧺', checked:false};
+    this.setState(s => ({shoppingItems:[...s.shoppingItems, item], newItemName:'', newItemQty:'1'}));
+  }
+
+  openAddRecipeModal(){ this.setState({showAddModal:true}); }
+  closeAddRecipeModal(){ this.setState({showAddModal:false, newRecipeTitle:'', newRecipeDescription:'', newRecipeTag:'Saladas', newRecipeIngredients:[{name:'',qty:''}]}); }
+  addIngredientRow(){ this.setState(s => ({newRecipeIngredients:[...s.newRecipeIngredients, {name:'',qty:''}]})); }
+  updateIngredient(i, field, value){ this.setState(s => ({newRecipeIngredients: s.newRecipeIngredients.map((ing,idx) => idx===i ? {...ing,[field]:value} : ing)})); }
+  removeIngredientRow(i){ this.setState(s => ({newRecipeIngredients: s.newRecipeIngredients.filter((_,idx)=>idx!==i)})); }
+  submitNewRecipe(){
+    const title = this.state.newRecipeTitle.trim();
+    if (!title) return;
+    const ingredientNames = this.state.newRecipeIngredients.map(ing=>ing.name.toLowerCase());
+    const isGlutenFree = !ingredientNames.some(n => GLUTEN_KEYWORDS.some(kw => n.includes(kw)));
+    const tags = [this.state.newRecipeTag];
+    if (isGlutenFree) tags.push('Sin TACC');
+    const recipe = {
+      id: Date.now(), title,
+      description: this.state.newRecipeDescription,
+      ingredients: this.state.newRecipeIngredients.filter(ing=>ing.name.trim()),
+      kcal: 350, time: 20,
+      protein: 12, carbs: 30, fat: 12,
+      tags, kind: this.state.newRecipeTag, img: null, isCustom: true
+    };
+    this.setState(s => ({recipes: [recipe, ...s.recipes], showAddModal:false, newRecipeTitle:'', newRecipeDescription:'', newRecipeTag:'Saladas', newRecipeIngredients:[{name:'',qty:''}]}));
+  }
+
+  renderVals(){
+    const s = this.state;
+    const isMobile = s.isMobile;
+
+    const dietChips = DIET_OPTIONS.map(d => ({label:d.label, onClick:()=>this.setDiet(d.value), style: chipStyle(d.value===s.diet,150)}));
+    const allergyChips = ALLERGY_OPTIONS.map(a => ({label:a, onClick:()=>this.toggleAllergy(a), style: chipStyle(s.allergies.includes(a),50)}));
+
+    const filteredSuggestions = s.dislikeInput.length > 0
+      ? DISLIKE_SUGGESTIONS.filter(w => w.toLowerCase().includes(s.dislikeInput.toLowerCase()) && !s.dislikes.includes(w)).slice(0,5).map(w => ({label:w, onClick:()=>this.addDislike(w)}))
+      : [];
+    const showSuggestions = filteredSuggestions.length > 0;
+    const dislikeChipsList = s.dislikes.map(d => ({label:d, onRemove:()=>this.removeDislike(d)}));
+
+    const stepDots = ONBOARDING_STEPS.map((step,i) => ({
+      style: `width:${i===s.onboardingStep?22:8}px;height:8px;border-radius:999px;background:${i<=s.onboardingStep?'oklch(20% 0 0)':'oklch(90% 0.005 90)'}`
+    }));
+    const stepLabel = `Paso ${s.onboardingStep+1} de ${ONBOARDING_STEPS.length}`;
+    const prevButtonStyle = s.onboardingStep===0
+      ? 'padding:14px 22px;border:none;border-radius:14px;background:none;color:transparent;font-size:15px;font-weight:700;cursor:default'
+      : 'padding:14px 22px;border:1.5px solid oklch(88% 0.005 90);border-radius:14px;background:#fff;color:oklch(25% 0.01 90);font-size:15px;font-weight:700;cursor:pointer';
+    const nextButtonLabel = s.onboardingStep >= ONBOARDING_STEPS.length-1 ? 'Guardar y armar mi menú' : 'Continuar';
+
+    const collapsed = !isMobile && s.navCollapsed;
+    const shellStyle = `display:flex;flex-direction:${isMobile?'column':'row'};min-height:100vh`;
+    const navStyle = isMobile
+      ? 'position:fixed;left:0;right:0;bottom:0;height:64px;background:#fff;border-top:1px solid oklch(92% 0.005 90);display:flex;align-items:center;justify-content:space-around;padding:0 8px;z-index:15'
+      : `width:${collapsed?'76px':'220px'};flex:none;height:100vh;position:sticky;top:0;background:#fff;border-right:1px solid oklch(92% 0.005 90);padding:24px ${collapsed?'14px':'18px'};display:flex;flex-direction:column;gap:20px`;
+    const navBrandRowStyle = isMobile ? 'display:none' : 'display:flex;align-items:center;justify-content:space-between;gap:6px';
+    const navBrandStyle = 'display:flex;align-items:center;gap:8px;min-width:0';
+    const navBrandLabelStyle = collapsed ? 'display:none' : 'font-size:14px;font-weight:800;letter-spacing:0.01em;overflow:hidden;white-space:nowrap';
+    const betaTagStyle = collapsed ? 'display:none' : 'font-size:10px;font-weight:800;color:oklch(55% 0.13 50);background:oklch(94% 0.03 50);padding:2px 6px;border-radius:5px;letter-spacing:0.03em;text-transform:uppercase;flex:none';
+    const navRightGroupStyle = isMobile ? 'display:flex;width:100%;justify-content:space-around' : 'display:flex;flex-direction:column;gap:20px;flex:1';
+    const navItemsWrapStyle = isMobile ? 'display:flex;width:100%;justify-content:space-around' : 'display:flex;flex-direction:column;gap:4px';
+    const navLabelStyle = isMobile ? 'font-size:11px;font-weight:700;margin-top:2px' : (collapsed ? 'display:none' : 'display:block');
+    const onShoppingScreen = s.screen === 'shopping';
+    const mainStyle = `flex:1;min-width:0;padding:${isMobile?`24px 16px ${onShoppingScreen?'190px':'90px'}`:`36px 40px ${onShoppingScreen?'130px':'36px'}`};overflow-x:hidden;background:#fff`;
+    const showCollapseToggle = !isMobile;
+    const collapseIcon = collapsed ? '›' : '‹';
+
+    const NAV_DEFS = [{key:'dashboard',label:'Menú semanal'},{key:'shopping',label:'Compras'},{key:'recipes',label:'Recetas'}];
+    const navStylesByKey = {};
+    NAV_DEFS.forEach(n => {
+      const active = s.screen === n.key;
+      const base = isMobile
+        ? `border:none;background:none;display:flex;flex-direction:column;align-items:center;padding:8px 10px;cursor:pointer;`
+        : `border:none;background:none;display:flex;align-items:center;gap:10px;text-align:left;padding:11px 12px;border-radius:10px;cursor:pointer;`;
+      const color = active ? 'oklch(20% 0 0)' : 'oklch(45% 0.01 90)';
+      const bg = (!isMobile && active) ? 'oklch(94% 0.005 90)' : (isMobile ? 'none' : 'transparent');
+      navStylesByKey[n.key] = {onClick:()=>this.setScreen(n.key), style: base + `color:${color};background:${bg}`, iconColor: color};
+    });
+    const dashboardNav = navStylesByKey.dashboard, shoppingNav = navStylesByKey.shopping, recipesNav = navStylesByKey.recipes;
+
+    const showProfile = !isMobile;
+    const profileRowStyle = `display:flex;align-items:center;gap:10px;padding:11px 4px;border-top:1px solid oklch(93% 0.005 90);margin-top:auto;cursor:pointer`;
+    const profileInitial = 'V';
+    const profileName = 'Vos';
+    const profileEmail = s.emailInput || 'Cuenta de Google';
+
+    const activeMeals = MEALS.filter(m => s.enabledMeals[m.key]);
+    const plannedList = [];
+    DAYS.forEach(day => activeMeals.forEach(m => { const r = s.plan[day][m.key]; if (r) plannedList.push(r); }));
+    const totalKcal = plannedList.reduce((a,r)=>a+r.kcal,0);
+    const totalProtein = plannedList.reduce((a,r)=>a+r.protein,0);
+    const totalCarbs = plannedList.reduce((a,r)=>a+r.carbs,0);
+    const totalFat = plannedList.reduce((a,r)=>a+r.fat,0);
+    const pct = Math.min(100, Math.round(totalKcal/WEEKLY_KCAL_GOAL*100));
+    const kcalSummaryLabel = `${totalKcal} / ${WEEKLY_KCAL_GOAL} kcal`;
+    const kcalBarStyle = `height:100%;border-radius:999px;width:${pct}%;background:oklch(20% 0 0)`;
+    const filledSlotsLabel = `${plannedList.length} de ${DAYS.length*activeMeals.length} comidas planificadas`;
+    const totalSlots = DAYS.length*activeMeals.length;
+    const weekProgressPct = totalSlots ? Math.round(plannedList.length/totalSlots*100) : 0;
+    const weekIncomplete = weekProgressPct < 100;
+    const weekProgressLabel = `${weekProgressPct}%`;
+    const weekProgressBarStyle = `height:100%;border-radius:999px;width:${weekProgressPct}%;background:oklch(58% 0.15 150)`;
+
+    const macroDefs = [
+      {label:'Proteínas', total:totalProtein, goal:WEEKLY_PROTEIN_GOAL},
+      {label:'Carbohidratos', total:totalCarbs, goal:WEEKLY_CARBS_GOAL},
+      {label:'Grasas', total:totalFat, goal:WEEKLY_FAT_GOAL}
+    ];
+    const macroStats = macroDefs.map(m => {
+      const p = Math.min(100, Math.round(m.total/m.goal*100));
+      return {label:m.label, valueLabel:`${m.total}g / ${m.goal}g`, barStyle:`height:100%;border-radius:999px;width:${p}%;background:oklch(45% 0.005 90)`};
+    });
+
+    const focusedDay = DAYS[s.focusedDayIndex];
+    const focusedDayRecipes = activeMeals.map(m=>s.plan[focusedDay][m.key]).filter(Boolean);
+    const heroDayKcal = focusedDayRecipes.reduce((a,r)=>a+r.kcal,0);
+    const heroDayKcalLabel = `${heroDayKcal} kcal`;
+    const heroProteinLabel = `${focusedDayRecipes.reduce((a,r)=>a+r.protein,0)}g`;
+    const heroCarbsLabel = `${focusedDayRecipes.reduce((a,r)=>a+r.carbs,0)}g`;
+    const heroFatLabel = `${focusedDayRecipes.reduce((a,r)=>a+r.fat,0)}g`;
+    const heroDayLabel = dayLabel(s.focusedDayIndex);
+    const calendarDays = DAYS.map((day,i) => {
+      const selected = i === s.focusedDayIndex;
+      return {
+        label: dayLabel(i).slice(0,3),
+        onClick: ()=>this.focusDay(i),
+        style: `flex:1;padding:10px 6px;border-radius:999px;border:1.5px solid ${selected?'oklch(20% 0 0)':'oklch(90% 0.005 90)'};background:${selected?'oklch(20% 0 0)':'#fff'};color:${selected?'#fff':'oklch(30% 0.01 90)'};font-size:12.5px;font-weight:700;cursor:pointer`
+      };
+    });
+    const postItStyle = `background:#fff1b8;border-radius:16px;padding:6px 20px;width:100%;position:relative`;
+    const buildMealRows = (day, dayIndex) => activeMeals.map((mDef,mi) => {
+      const key = mDef.key;
+      const recipe = s.plan[day][key];
+      const isLast = mi === activeMeals.length - 1;
+      return {
+        mealLabel: mDef.label, hasRecipe: !!recipe, empty: !recipe,
+        title: recipe ? recipe.title : '',
+        metaLabel: recipe ? `${recipe.time} min · ${recipe.kcal} kcal` : '',
+        rowStyle: `display:flex;align-items:center;gap:12px;padding:14px 0;${isLast?'':'border-bottom:1px dashed oklch(80% 0.04 90)'}`,
+        rowLabelStyle: `font-size:11.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.04em;color:oklch(45% 0.02 95);width:76px;flex:none`,
+        titleStyle: `font-size:14.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap`,
+        metaTextStyle: `font-size:12px;color:oklch(50% 0.01 90)`,
+        swapBtnStyle: `border:none;background:none;font-size:15px;cursor:pointer;flex:none;color:oklch(45% 0.01 90);display:flex;padding:4px`,
+        addBtnStyle: `flex:1;text-align:left;border:none;background:none;font-size:14px;font-weight:700;color:oklch(45% 0.01 90);cursor:pointer;padding:8px 0`,
+        onSwap: ()=>this.swapForComodin(day, key),
+        onAdd: ()=>this.openPicker(dayIndex, key),
+        onDelete: ()=>this.removeFromSlot(day, key)
+      };
+    });
+    const heroMeals = buildMealRows(focusedDay, s.focusedDayIndex);
+    const isDiaMode = s.dashboardViewMode === 'dia';
+    const isTodosMode = !isDiaMode;
+    const diaModeBtnStyle = `border:none;background:${isDiaMode?'oklch(92% 0.005 90)':'transparent'};padding:8px;border-radius:9px;cursor:pointer;color:oklch(30% 0.01 90);display:flex`;
+    const todosModeBtnStyle = `border:none;background:${isTodosMode?'oklch(92% 0.005 90)':'transparent'};padding:8px;border-radius:9px;cursor:pointer;color:oklch(30% 0.01 90);display:flex`;
+    const allDaysCards = DAYS.map((day,i) => {
+      const n = s.dayServings[day] ?? s.defaultServings;
+      return {
+        dayLabel: dayLabel(i),
+        servingsLabel: `Para ${n} ${n===1?'persona':'personas'}`,
+        meals: buildMealRows(day, i)
+      };
+    });
+
+    const otherDays = DAYS.map((day,i) => ({day,i})).filter(x => x.i !== s.focusedDayIndex).map(({day,i}) => {
+      const meals = activeMeals.map(m => s.plan[day][m.key]);
+      const dayKcal = meals.reduce((a,r)=>a+(r?r.kcal:0),0);
+      const filledCount = meals.filter(Boolean).length;
+      const semColor = filledCount === activeMeals.length ? 'oklch(58% 0.15 150)' : filledCount > 0 ? 'oklch(70% 0.15 80)' : 'oklch(88% 0.005 90)';
+      const mealThumbs = meals.map(r => ({style:`width:22px;height:22px;border-radius:50%;flex:none;background:${r?`url('${r.img}') center/cover`:'oklch(94% 0.005 90)'};border:1px dashed ${r?'transparent':'oklch(85% 0.005 90)'}`}));
+      return {
+        label: dayLabel(i),
+        rowStyle: `display:flex;align-items:center;gap:14px;padding:14px 16px;border-bottom:1px solid oklch(95% 0.003 90);cursor:pointer`,
+        semaphoreStyle: `width:8px;height:8px;border-radius:50%;background:${semColor};flex:none`,
+        labelStyle: `font-size:14px;font-weight:700;width:90px;flex:none`,
+        mealThumbs,
+        kcalTextStyle: `font-size:12.5px;color:oklch(50% 0.01 90);margin-left:auto`,
+        kcalLabel: dayKcal ? `${dayKcal} kcal` : 'Sin comidas',
+        onFocus: ()=>this.focusDay(i)
+      };
+    });
+
+    const isAccount = s.screen === 'account';
+    const servingsChips = [1,2,3,4,5,6].map(n => ({
+      label: String(n), onClick: ()=>this.setDefaultServings(n),
+      style: chipStyle(s.defaultServings===n, 150)
+    }));
+    const focusedDayServings = s.dayServings[focusedDay] ?? s.defaultServings;
+    const servingsControlStyle = `display:flex;align-items:center;gap:10px;padding-top:8px`;
+    const decServings = () => this.setDayServings(focusedDay, Math.max(1, focusedDayServings-1));
+    const incServings = () => this.setDayServings(focusedDay, focusedDayServings+1);
+    const mealToggles = MEALS.map(m => ({
+      key:m.key, label:m.label, enabled: s.enabledMeals[m.key],
+      onToggle: ()=>this.toggleMealEnabled(m.key),
+      trackStyle: `width:42px;height:24px;border-radius:999px;background:${s.enabledMeals[m.key]?'oklch(20% 0 0)':'oklch(90% 0.005 90)'};position:relative;cursor:pointer;transition:background 0.15s ease;flex:none`,
+      knobStyle: `width:18px;height:18px;border-radius:50%;background:#fff;position:absolute;top:3px;left:${s.enabledMeals[m.key]?'21px':'3px'};transition:left 0.15s ease`
+    }));
+
+    const showPicker = !!s.pickerSlot;
+    const pickerRecipes = s.pickerSlot ? s.recipes.map(r => ({
+      title:r.title, metaLabel:`${r.time} min · ${r.kcal} kcal`,
+      thumbStyle:`width:48px;height:48px;border-radius:10px;flex:none;background:url('${r.img}') center/cover`,
+      onSelect: ()=>{ this.assignRecipe(DAYS[s.pickerSlot.dayIndex], s.pickerSlot.mealKey, r); this.closePicker(); }
+    })) : [];
+
+    const aisleNamesPresent = [...new Set(s.shoppingItems.map(it => it.aisle))];
+    const aisleFilterChips = ['Todos', ...aisleNamesPresent].map(name => {
+      const selected = s.shoppingAisleFilter === name;
+      const emoji = name === 'Todos' ? '' : (s.shoppingItems.find(it=>it.aisle===name).emoji + ' ');
+      return {label: emoji + name, onClick: ()=>this.setShoppingFilter(name), style: chipStyle(selected, 0).replace('oklch(58% 0.15 0)','oklch(20% 0 0)')};
+    });
+    const visibleItems = s.shoppingItems.filter(it => s.shoppingAisleFilter === 'Todos' || it.aisle === s.shoppingAisleFilter);
+    const byAisle = {};
+    visibleItems.forEach(it => { (byAisle[it.aisle] = byAisle[it.aisle] || []).push(it); });
+    const mapItem = it => ({
+      id:it.id, qty:it.qty, name:it.name, checked:it.checked,
+      textStyle: it.checked ? 'text-decoration:line-through;color:oklch(65% 0.005 90)' : '',
+      onToggle: ()=>this.toggleShoppingItem(it.id),
+      onDelete: ()=>this.deleteShoppingItem(it.id)
+    });
+    const isByCategory = s.shoppingViewMode === 'categoria';
+    const isFlatView = !isByCategory;
+    const aisleGroups = Object.keys(byAisle).map(aisle => ({
+      aisle, emoji: byAisle[aisle][0].emoji,
+      items: byAisle[aisle].map(mapItem),
+      draftValue: s.newItemDrafts[aisle] || '',
+      onDraftChange: (e)=>this.setNewItemDraft(aisle, e.target.value),
+      onAdd: ()=>this.addShoppingItem(aisle)
+    }));
+    const flatItems = visibleItems.map(mapItem);
+    const shoppingEmpty = visibleItems.length === 0;
+    const emptyShoppingLabel = 'No te queda nada por comprar';
+    const aisleOptions = Object.keys(AISLE_EMOJI).map(a => ({value:a, label:`${AISLE_EMOJI[a]} ${a}`}));
+    const shoppingAddBarStyle = `position:fixed;left:${isMobile?'0':(collapsed?'76px':'220px')};right:0;bottom:${isMobile?'64px':'0'};z-index:16;background:#fff;border-top:1px solid oklch(92% 0.005 90);box-shadow:0 -6px 24px oklch(0% 0 0 / 0.07);padding:12px ${isMobile?'14px':'40px'};display:flex`;
+    const shoppingAddBarInnerStyle = 'display:flex;gap:8px;align-items:center;flex-wrap:wrap;width:100%;max-width:760px';
+    const addItemInputStyle = `flex:1;min-width:${isMobile?'100%':'180px'};padding:11px 14px;border-radius:10px;border:1.5px solid oklch(90% 0.005 90);font-family:inherit;font-size:14px;outline:none;background:oklch(99% 0.002 90)`;
+    const addItemQtyStyle = 'width:64px;flex:none;padding:11px 8px;border-radius:10px;border:1.5px solid oklch(90% 0.005 90);font-family:inherit;font-size:14px;text-align:center;outline:none;background:oklch(99% 0.002 90)';
+    const addItemSelectStyle = 'flex:none;padding:11px 10px;border-radius:10px;border:1.5px solid oklch(90% 0.005 90);font-family:inherit;font-size:14px;background:#fff;outline:none';
+    const addItemBtnStyle = 'flex:none;padding:11px 18px;border:none;border-radius:10px;background:oklch(20% 0 0);color:#fff;font-weight:800;font-size:14px;cursor:pointer;white-space:nowrap';
+    const categoryViewBtnStyle = `border:none;background:${isByCategory?'#fff':'transparent'};padding:8px;border-radius:9px;cursor:pointer;color:oklch(30% 0.01 90);display:flex;box-shadow:${isByCategory?'0 1px 3px oklch(0% 0 0 / 0.12)':'none'}`;
+    const flatViewBtnStyle = `border:none;background:${isFlatView?'#fff':'transparent'};padding:8px;border-radius:9px;cursor:pointer;color:oklch(30% 0.01 90);display:flex;box-shadow:${isFlatView?'0 1px 3px oklch(0% 0 0 / 0.12)':'none'}`;
+
+    const recipesGridStyle = `display:grid;grid-template-columns:repeat(auto-fill,minmax(${isMobile?150:170}px,1fr));gap:16px`;
+    const isGridView = s.recipesView === 'grid';
+    const isListView = !isGridView;
+    const gridViewBtnStyle = `border:none;background:${isGridView?'#fff':'transparent'};padding:8px;border-radius:9px;cursor:pointer;color:oklch(30% 0.01 90);display:flex;box-shadow:${isGridView?'0 1px 3px oklch(0% 0 0 / 0.12)':'none'}`;
+    const listViewBtnStyle = `border:none;background:${isListView?'#fff':'transparent'};padding:8px;border-radius:9px;cursor:pointer;color:oklch(30% 0.01 90);display:flex;box-shadow:${isListView?'0 1px 3px oklch(0% 0 0 / 0.12)':'none'}`;
+    const kindFilterChips = ['Todas','Mis recetas','Saladas','Ocasiones especiales','Niveles de cocina','Dietas especiales','Bebidas','Dulces'].map(k => ({
+      label:k, onClick:()=>this.setRecipeKindFilter(k), style: chipStyle(s.recipeKindFilter===k, 0).replace('oklch(58% 0.15 0)','oklch(20% 0 0)')
+    }));
+    const filteredRecipes = s.recipes.filter(r =>
+      (s.recipeKindFilter==='Todas' || (s.recipeKindFilter==='Mis recetas' ? r.isCustom : r.kind===s.recipeKindFilter)) &&
+      r.title.toLowerCase().includes(s.recipeSearch.toLowerCase())
+    );
+    const recipesList = filteredRecipes.map(r => ({
+      title:r.title, hasImg: !!r.img,
+      imgStyle: `width:100%;height:150px;background-image:url('${r.img||''}');background-size:cover;background-position:center`,
+      listThumbStyle: `width:56px;height:56px;border-radius:10px;flex:none;background:${r.img?`url('${r.img}') center/cover`:'oklch(95% 0.005 90)'}`,
+      placeholderStyle: r.img ? 'display:none' : 'width:100%;height:150px;background:repeating-linear-gradient(135deg,oklch(95% 0.005 90),oklch(95% 0.005 90) 10px,oklch(97% 0.003 90) 10px,oklch(97% 0.003 90) 20px);display:flex;align-items:center;justify-content:center',
+      metaLabel:`${r.time} min · ${r.kcal} kcal`,
+      tagChips: r.tags.map(t => ({label:t, style:`padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;background:${(TAG_COLORS[t]||{bg:'oklch(94% 0.005 90)'}).bg};color:${(TAG_COLORS[t]||{fg:'oklch(40% 0.005 90)'}).fg}`})),
+      onOpen: ()=>this.openRecipeDetail(r.id)
+    }));
+
+    const showRecipeDetail = s.selectedRecipeId != null;
+    const selRecipe = showRecipeDetail ? s.recipes.find(r=>r.id===s.selectedRecipeId) : null;
+    const recipeDetailPanelStyle = `position:fixed;top:0;right:0;bottom:0;width:${isMobile?'100%':'420px'};max-width:100%;background:#fff;box-sizing:border-box;overflow-y:auto;z-index:31;border-left:1px solid oklch(90% 0.005 90);transform:translateX(${showRecipeDetail?'0':'100%'});transition:transform 0.25s ease`;
+    const selectedRecipe = selRecipe ? {
+      hasImg: !!selRecipe.img,
+      imgStyle: `width:100%;height:220px;background-image:url('${selRecipe.img||''}');background-size:cover;background-position:center`,
+      title: selRecipe.title,
+      metaLabel: `${selRecipe.time} min · ${selRecipe.kcal} kcal`,
+      tagChips: selRecipe.tags.map(t => ({label:t, style:`padding:4px 10px;border-radius:999px;font-size:11px;font-weight:700;background:${(TAG_COLORS[t]||{bg:'oklch(94% 0.005 90)'}).bg};color:${(TAG_COLORS[t]||{fg:'oklch(40% 0.005 90)'}).fg}`})),
+      hasIngredients: !!(selRecipe.ingredients && selRecipe.ingredients.length),
+      ingredientRows: (selRecipe.ingredients||[]).map(ing => ({name:ing.name, qty:ing.qty})),
+      hasDescription: !!selRecipe.description,
+      description: selRecipe.description || ''
+    } : {hasImg:false, imgStyle:'', title:'', metaLabel:'', tagChips:[], hasIngredients:false, ingredientRows:[], hasDescription:false, description:''};
+
+    const newRecipeTagChips = ['Saladas','Ocasiones especiales','Niveles de cocina','Dietas especiales','Bebidas','Dulces'].map(t => ({
+      label:t, onClick:()=>this.setState({newRecipeTag:t}), style: chipStyle(s.newRecipeTag===t, 150)
+    }));
+    const sidePanelStyle = `position:fixed;top:0;right:0;bottom:0;width:${isMobile?'100%':'400px'};max-width:100%;background:#fff;box-sizing:border-box;overflow-y:auto;padding:24px;z-index:31;border-left:1px solid oklch(90% 0.005 90);transform:translateX(${s.showAddModal?'0':'100%'});transition:transform 0.25s ease`;
+    const newRecipeIngredients = s.newRecipeIngredients.map((ing,i) => ({
+      name: ing.name, qty: ing.qty,
+      onNameChange: (e)=>this.updateIngredient(i,'name',e.target.value),
+      onQtyChange: (e)=>this.updateIngredient(i,'qty',e.target.value),
+      onRemove: ()=>this.removeIngredientRow(i)
+    }));
+    const namesLower = s.newRecipeIngredients.map(ing=>ing.name.toLowerCase());
+    const hasGluten = namesLower.some(n => GLUTEN_KEYWORDS.some(kw => n.includes(kw)));
+    const tacIndicatorLabel = hasGluten ? 'Contiene ingredientes con gluten' : 'Se marcará automáticamente como Sin TACC';
+
+    return {
+      isLogin: s.screen === 'login',
+      isEmailCode: s.screen === 'emailCode',
+      isOnboarding: s.screen === 'onboarding',
+      isApp: !['login','emailCode','onboarding'].includes(s.screen),
+      isDashboard: s.screen === 'dashboard',
+      isShopping: s.screen === 'shopping',
+      isRecipes: s.screen === 'recipes',
+      isAccount, mealToggles, goToAccount: ()=>this.goToAccount(),
+      servingsChips,
+      focusedDayServingsLabel: `Para ${focusedDayServings} ${focusedDayServings===1?'persona':'personas'}`,
+      decServings, incServings,
+      inviteEmail: s.inviteEmail, onInviteEmailChange: (e)=>this.setState({inviteEmail:e.target.value}),
+      sendInvite: ()=>this.sendInvite(),
+      hasHousemates: s.housemates.length>0,
+      housemates: s.housemates.map(h => ({email:h.email, statusLabel:h.statusLabel, initial:h.email[0].toUpperCase()})),
+      emailInput: s.emailInput, emailCodeInput: s.emailCodeInput,
+      onEmailChange: (e)=>this.setState({emailInput:e.target.value}),
+      onCodeChange: (e)=>this.setState({emailCodeInput:e.target.value}),
+      loginWithGoogle: ()=>this.loginWithGoogle(),
+      sendCode: ()=>this.sendCode(),
+      verifyCode: ()=>this.verifyCode(),
+      backToLogin: ()=>this.backToLogin(),
+      stepDots, stepLabel, prevButtonStyle, nextButtonLabel,
+      isStepDiet: s.onboardingStep===0, isStepAllergy: s.onboardingStep===1, isStepDislikes: s.onboardingStep===2,
+      prevStep: ()=>this.prevStep(), nextStep: ()=>this.nextStep(),
+      dietChips, allergyChips, dislikeInput: s.dislikeInput,
+      onDislikeInput: (e)=>this.setState({dislikeInput:e.target.value}),
+      showSuggestions, filteredSuggestions, dislikeChipsList,
+      shellStyle, navStyle, navBrandRowStyle, navBrandStyle, navBrandLabelStyle, betaTagStyle, navRightGroupStyle, navItemsWrapStyle, navLabelStyle, mainStyle,
+      showCollapseToggle, collapseIcon, toggleNavCollapsed: ()=>this.toggleNavCollapsed(),
+      dashboardNav, shoppingNav, recipesNav,
+      showProfile, profileRowStyle, profileInitial, profileName, profileEmail,
+      filledSlotsLabel, kcalSummaryLabel, kcalBarStyle, macroStats,
+      autoFillWeek: ()=>this.autoFillWeek(),
+      heroDayLabel, calendarDays, postItStyle, heroMeals, otherDays,
+      weekIncomplete, weekProgressLabel, weekProgressBarStyle, heroDayKcalLabel, heroProteinLabel, heroCarbsLabel, heroFatLabel,
+      isDiaMode, isTodosMode, diaModeBtnStyle, todosModeBtnStyle, allDaysCards,
+      selectDiaMode: ()=>this.setDashboardViewMode('dia'), selectTodosMode: ()=>this.setDashboardViewMode('todos'),
+      showPicker, pickerRecipes, closePicker: ()=>this.closePicker(), stopClick: (e)=>e.stopPropagation(),
+      aisleFilterChips, aisleGroups, flatItems, shoppingEmpty, emptyShoppingLabel,
+      newItemName: s.newItemName, newItemQty: s.newItemQty, newItemAisle: s.newItemAisle, aisleOptions,
+      onNewItemNameChange: (e)=>this.setState({newItemName:e.target.value}),
+      onNewItemNameKeyDown: (e)=>{ if(e.key==='Enter'){ e.preventDefault(); this.addGeneralShoppingItem(); } },
+      onNewItemQtyChange: (e)=>this.setState({newItemQty:e.target.value}),
+      onNewItemAisleChange: (e)=>this.setState({newItemAisle:e.target.value}),
+      addGeneralShoppingItem: ()=>this.addGeneralShoppingItem(),
+      shoppingAddBarStyle, shoppingAddBarInnerStyle, addItemInputStyle, addItemQtyStyle, addItemSelectStyle, addItemBtnStyle,
+      isByCategory, isFlatView, categoryViewBtnStyle, flatViewBtnStyle,
+      selectCategoryView: ()=>this.setShoppingViewMode('categoria'), selectFlatView: ()=>this.setShoppingViewMode('junto'),
+      recipesGridStyle, isGridView, isListView, gridViewBtnStyle, listViewBtnStyle,
+      selectGridView: ()=>this.setRecipesView('grid'), selectListView: ()=>this.setRecipesView('list'),
+      recipeSearch: s.recipeSearch, onRecipeSearch: (e)=>this.setRecipeSearch(e),
+      kindFilterChips,
+      recipesList,
+      showRecipeDetail, selectedRecipe, recipeDetailPanelStyle,
+      closeRecipeDetail: ()=>this.closeRecipeDetail(),
+      showAddModal: s.showAddModal, sidePanelStyle,
+      openAddRecipeModal: ()=>this.openAddRecipeModal(),
+      closeAddRecipeModal: ()=>this.closeAddRecipeModal(),
+      submitNewRecipe: ()=>this.submitNewRecipe(),
+      newRecipeTitle: s.newRecipeTitle, newRecipeDescription: s.newRecipeDescription,
+      onNewTitleChange: (e)=>this.setState({newRecipeTitle:e.target.value}),
+      onNewDescriptionChange: (e)=>this.setState({newRecipeDescription:e.target.value}),
+      newRecipeIngredients, addIngredientRow: ()=>this.addIngredientRow(),
+      tacIndicatorLabel,
+      newRecipeTagChips
+    };
+  }
+}
+
+</script>
+</body>
+</html>
