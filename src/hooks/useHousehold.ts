@@ -13,10 +13,13 @@ import {
   orderBy,
 } from "firebase/firestore";
 import { getFirebaseDb } from "@/lib/firebase";
-import { emptyWeekPlan } from "@/lib/constants";
+import { DAYS, MEALS, emptyWeekPlan, normalizePlanEntry } from "@/lib/constants";
 import type {
+  DayPlan,
   HouseholdSettings,
   Member,
+  PlanEntry,
+  QuickFood,
   Recipe,
   ShoppingItem,
   Template,
@@ -38,6 +41,7 @@ export function useHousehold(householdId: string | null) {
   const [settings, setSettings] = useState<HouseholdSettings>(DEFAULT_SETTINGS);
   const [plan, setPlanState] = useState<WeekPlan>(emptyWeekPlan());
   const [recipes, setRecipes] = useState<Recipe[]>([]);
+  const [quickFoods, setQuickFoods] = useState<QuickFood[]>([]);
   const [shoppingItems, setShoppingItems] = useState<ShoppingItem[]>([]);
   const [templates, setTemplates] = useState<Template[]>([]);
   const [members, setMembers] = useState<Member[]>([]);
@@ -53,10 +57,23 @@ export function useHousehold(householdId: string | null) {
         setReady(true);
       }),
       onSnapshot(doc(db, "households", householdId, "plan", "week"), (snap) => {
-        if (snap.exists()) setPlanState(snap.data() as WeekPlan);
+        if (!snap.exists()) return;
+        const raw = snap.data() as Record<string, Record<string, unknown>>;
+        const normalized: WeekPlan = {};
+        DAYS.forEach((day) => {
+          const dayPlan = {} as DayPlan;
+          MEALS.forEach((m) => {
+            dayPlan[m.key] = normalizePlanEntry(raw[day]?.[m.key]);
+          });
+          normalized[day] = dayPlan;
+        });
+        setPlanState(normalized);
       }),
       onSnapshot(collection(db, "households", householdId, "recipes"), (snap) => {
         setRecipes(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Recipe)));
+      }),
+      onSnapshot(collection(db, "households", householdId, "quickFoods"), (snap) => {
+        setQuickFoods(snap.docs.map((d) => ({ id: d.id, ...d.data() } as QuickFood)));
       }),
       onSnapshot(collection(db, "households", householdId, "shoppingItems"), (snap) => {
         setShoppingItems(snap.docs.map((d) => ({ id: d.id, ...d.data() } as ShoppingItem)));
@@ -92,9 +109,9 @@ export function useHousehold(householdId: string | null) {
     [householdId]
   );
 
-  const assignRecipe = useCallback(
-    (day: string, mealKey: MealKey, recipeId: string | null) => {
-      const next = { ...plan, [day]: { ...plan[day], [mealKey]: recipeId } };
+  const assignEntry = useCallback(
+    (day: string, mealKey: MealKey, entry: PlanEntry | null) => {
+      const next = { ...plan, [day]: { ...plan[day], [mealKey]: entry } };
       setPlan(next);
     },
     [plan, setPlan]
@@ -104,6 +121,23 @@ export function useHousehold(householdId: string | null) {
     async (recipe: Omit<Recipe, "id">) => {
       if (!householdId) return;
       await addDoc(collection(getFirebaseDb(), "households", householdId, "recipes"), recipe);
+    },
+    [householdId]
+  );
+
+  const addQuickFood = useCallback(
+    async (food: Omit<QuickFood, "id">) => {
+      if (!householdId) return null;
+      const ref = await addDoc(collection(getFirebaseDb(), "households", householdId, "quickFoods"), food);
+      return ref.id;
+    },
+    [householdId]
+  );
+
+  const deleteQuickFood = useCallback(
+    (id: string) => {
+      if (!householdId) return;
+      void deleteDoc(doc(getFirebaseDb(), "households", householdId, "quickFoods", id));
     },
     [householdId]
   );
@@ -171,9 +205,12 @@ export function useHousehold(householdId: string | null) {
       updateSettings,
       plan,
       setPlan,
-      assignRecipe,
+      assignEntry,
       recipes,
       addRecipe,
+      quickFoods,
+      addQuickFood,
+      deleteQuickFood,
       shoppingItems,
       toggleShoppingItem,
       deleteShoppingItem,
@@ -190,9 +227,12 @@ export function useHousehold(householdId: string | null) {
       updateSettings,
       plan,
       setPlan,
-      assignRecipe,
+      assignEntry,
       recipes,
       addRecipe,
+      quickFoods,
+      addQuickFood,
+      deleteQuickFood,
       shoppingItems,
       toggleShoppingItem,
       deleteShoppingItem,

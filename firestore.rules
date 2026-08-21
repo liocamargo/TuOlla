@@ -52,6 +52,10 @@ service cloud.firestore {
         allow read, write: if isMember(householdId);
       }
 
+      match /quickFoods/{foodId} {
+        allow read, write: if isMember(householdId);
+      }
+
       match /shoppingItems/{itemId} {
         allow read, write: if isMember(householdId);
       }

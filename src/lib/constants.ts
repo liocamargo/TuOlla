@@ -1,4 +1,4 @@
-import type { MealGroup, MealKey, Recipe } from "./types";
+import type { MealGroup, MealKey, PlanEntry, QuickFood, Recipe } from "./types";
 
 export const DIET_OPTIONS = [
   { value: "Omnívoro", label: "Como de todo, sin restricciones" },
@@ -71,6 +71,18 @@ export function recipeMatchesMeal(recipe: Recipe, mealKey: MealKey): boolean {
   return !recipe.mealGroup || recipe.mealGroup === MEAL_KEY_TO_GROUP[mealKey];
 }
 
+export function quickFoodMatchesMeal(food: QuickFood, mealKey: MealKey): boolean {
+  return food.mealGroup === MEAL_KEY_TO_GROUP[mealKey];
+}
+
+// Plan slots used to store a bare recipe id string. Old Firestore data may
+// still have that shape — read it back as a recipe entry with no servings set.
+export function normalizePlanEntry(value: unknown): PlanEntry | null {
+  if (!value) return null;
+  if (typeof value === "string") return { type: "recipe", refId: value };
+  return value as PlanEntry;
+}
+
 export const ONBOARDING_STEPS = ["diet", "allergy", "dislikes"] as const;
 
 export const TAG_COLORS: Record<string, { bg: string; fg: string }> = {
@@ -133,6 +145,14 @@ export const SEED_RECIPES: Omit<Recipe, "id">[] = [
   { title: "Panqueques integrales", img: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&q=60&auto=format", time: 20, kcal: 390, protein: 12, carbs: 48, fat: 14, tags: ["Vegetariano"], kind: "Dulces", mealGroup: "desayuno_merienda" },
   { title: "Poke bowl de atún", img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&q=60&auto=format", time: 20, kcal: 460, protein: 28, carbs: 48, fat: 16, tags: ["Sin TACC"], kind: "Saladas", mealGroup: "comida" },
   { title: "Bife con puré de papas", img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=60&auto=format", time: 35, kcal: 610, protein: 38, carbs: 40, fat: 30, tags: ["Aprovechamiento"], kind: "Ocasiones especiales", mealGroup: "comida" },
+];
+
+export const SEED_QUICK_FOODS: Omit<QuickFood, "id">[] = [
+  { title: "Café con leche y tostadas", kcal: 220, mealGroup: "desayuno_merienda" },
+  { title: "Yogur con granola", kcal: 250, mealGroup: "desayuno_merienda" },
+  { title: "Fruta", kcal: 80, mealGroup: "desayuno_merienda" },
+  { title: "Sandwich de jamón y queso", kcal: 350, mealGroup: "comida" },
+  { title: "Milanesa con ensalada", kcal: 480, mealGroup: "comida" },
 ];
 
 export const SEED_SHOPPING_ITEMS: Omit<import("./types").ShoppingItem, "id" | "checked">[] = [

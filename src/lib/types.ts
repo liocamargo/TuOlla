@@ -20,7 +20,20 @@ export interface Recipe {
   isCustom?: boolean;
 }
 
-export type DayPlan = Record<MealKey, string | null>;
+// A quick-add food: just a title and a calorie count, for logging something
+// fast without going through the full recipe form.
+export interface QuickFood {
+  id: string;
+  title: string;
+  kcal: number;
+  mealGroup: MealGroup;
+}
+
+export type PlanEntry =
+  | { type: "recipe"; refId: string; servings?: number }
+  | { type: "quick"; refId: string };
+
+export type DayPlan = Record<MealKey, PlanEntry | null>;
 
 export type WeekPlan = Record<string, DayPlan>;
 

@@ -8,7 +8,7 @@ import {
 } from "firebase/firestore";
 import type { User } from "firebase/auth";
 import { getFirebaseDb } from "./firebase";
-import { SEED_RECIPES, SEED_SHOPPING_ITEMS, emptyWeekPlan } from "./constants";
+import { SEED_QUICK_FOODS, SEED_RECIPES, SEED_SHOPPING_ITEMS, emptyWeekPlan } from "./constants";
 
 /**
  * Resolves the household a user belongs to, creating one (and seeding
@@ -66,6 +66,10 @@ export async function bootstrapHousehold(user: User): Promise<string> {
   SEED_RECIPES.forEach((recipe) => {
     const ref = doc(db, "households", householdId, "recipes", crypto.randomUUID());
     batch.set(ref, recipe);
+  });
+  SEED_QUICK_FOODS.forEach((food) => {
+    const ref = doc(db, "households", householdId, "quickFoods", crypto.randomUUID());
+    batch.set(ref, food);
   });
   SEED_SHOPPING_ITEMS.forEach((item) => {
     const ref = doc(db, "households", householdId, "shoppingItems", crypto.randomUUID());
