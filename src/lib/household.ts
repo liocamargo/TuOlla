@@ -1,14 +1,26 @@
 import {
+  collection,
   doc,
   getDoc,
+  getDocs,
   setDoc,
   deleteDoc,
   writeBatch,
   serverTimestamp,
+  type Firestore,
 } from "firebase/firestore";
 import type { User } from "firebase/auth";
 import { getFirebaseDb } from "./firebase";
-import { SEED_QUICK_FOODS, SEED_RECIPES, SEED_SHOPPING_ITEMS, emptyWeekPlan } from "./constants";
+import { SEED_QUICK_FOODS, SEED_SHOPPING_ITEMS, emptyWeekPlan } from "./constants";
+
+async function cleanupSeededRecipes(db: Firestore, householdId: string) {
+  const snap = await getDocs(collection(db, "households", householdId, "recipes"));
+  const seeded = snap.docs.filter((d) => d.data().isCustom !== true);
+  if (!seeded.length) return;
+  const batch = writeBatch(db);
+  seeded.forEach((d) => batch.delete(d.ref));
+  await batch.commit();
+}
 
 /**
  * Resolves the household a user belongs to, creating one (and seeding
@@ -19,7 +31,10 @@ export async function bootstrapHousehold(user: User): Promise<string> {
   const userRef = doc(db, "users", user.uid);
   const userSnap = await getDoc(userRef);
   const existingHouseholdId = userSnap.data()?.householdId as string | undefined;
-  if (existingHouseholdId) return existingHouseholdId;
+  if (existingHouseholdId) {
+    await cleanupSeededRecipes(db, existingHouseholdId).catch(() => {});
+    return existingHouseholdId;
+  }
 
   const email = (user.email || "").toLowerCase();
   const inviteRef = doc(db, "invites", email);
@@ -37,6 +52,7 @@ export async function bootstrapHousehold(user: User): Promise<string> {
     batch.set(userRef, { email, householdId }, { merge: true });
     await batch.commit();
     await deleteDoc(inviteRef);
+    await cleanupSeededRecipes(db, householdId).catch(() => {});
     return householdId;
   }
 
@@ -63,10 +79,6 @@ export async function bootstrapHousehold(user: User): Promise<string> {
     onboardingDone: false,
   });
   batch.set(doc(db, "households", householdId, "plan", "week"), emptyWeekPlan());
-  SEED_RECIPES.forEach((recipe) => {
-    const ref = doc(db, "households", householdId, "recipes", crypto.randomUUID());
-    batch.set(ref, recipe);
-  });
   SEED_QUICK_FOODS.forEach((food) => {
     const ref = doc(db, "households", householdId, "quickFoods", crypto.randomUUID());
     batch.set(ref, food);

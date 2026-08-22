@@ -151,7 +151,7 @@ export default function RecipesView({ household, isMobile }: Props) {
 
       <button
         onClick={() => setShowAddModal(true)}
-        style={{ position: "fixed", bottom: 32, right: 32, width: 56, height: 56, borderRadius: "50%", border: "none", background: "oklch(20% 0 0)", color: "#fff", cursor: "pointer", zIndex: 20, display: "flex", alignItems: "center", justifyContent: "center" }}
+        style={{ position: "fixed", bottom: isMobile ? 84 : 32, right: isMobile ? 20 : 32, width: 56, height: 56, borderRadius: "50%", border: "none", background: "oklch(20% 0 0)", color: "#fff", cursor: "pointer", zIndex: 20, display: "flex", alignItems: "center", justifyContent: "center" }}
       >
         <Plus size={26} />
       </button>

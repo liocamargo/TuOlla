@@ -134,19 +134,6 @@ export const RECIPE_KINDS = [
   "Dulces",
 ];
 
-export const SEED_RECIPES: Omit<Recipe, "id">[] = [
-  { title: "Pizza casera veggie", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&q=60&auto=format", time: 30, kcal: 520, protein: 18, carbs: 60, fat: 20, tags: ["Vegetariano"], kind: "Saladas", mealGroup: "comida" },
-  { title: "Ensalada mediterránea", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&q=60&auto=format", time: 10, kcal: 310, protein: 8, carbs: 30, fat: 16, tags: ["Vegano", "Sin TACC"], kind: "Dietas especiales", mealGroup: "comida" },
-  { title: "Fideos con salsa de tomate", img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&q=60&auto=format", time: 20, kcal: 480, protein: 14, carbs: 70, fat: 14, tags: ["Vegetariano"], kind: "Saladas", mealGroup: "comida" },
-  { title: "Tacos de pollo", img: "https://images.unsplash.com/photo-1490645935967-10de6ba17061?w=400&q=60&auto=format", time: 25, kcal: 540, protein: 32, carbs: 45, fat: 22, tags: ["Comodín"], kind: "Saladas", mealGroup: "comida" },
-  { title: "Bowl de avena y frutas", img: "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&q=60&auto=format", time: 10, kcal: 350, protein: 10, carbs: 55, fat: 10, tags: ["Vegano"], kind: "Dulces", mealGroup: "desayuno_merienda" },
-  { title: "Salmón grillado con vegetales", img: "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=400&q=60&auto=format", time: 25, kcal: 430, protein: 36, carbs: 12, fat: 24, tags: ["Sin TACC"], kind: "Saladas", mealGroup: "comida" },
-  { title: "Buddha bowl de garbanzos", img: "https://images.unsplash.com/photo-1543339494-b4cd4f7ba686?w=400&q=60&auto=format", time: 15, kcal: 420, protein: 14, carbs: 52, fat: 16, tags: ["Vegano", "Comodín"], kind: "Dietas especiales", mealGroup: "comida" },
-  { title: "Panqueques integrales", img: "https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400&q=60&auto=format", time: 20, kcal: 390, protein: 12, carbs: 48, fat: 14, tags: ["Vegetariano"], kind: "Dulces", mealGroup: "desayuno_merienda" },
-  { title: "Poke bowl de atún", img: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&q=60&auto=format", time: 20, kcal: 460, protein: 28, carbs: 48, fat: 16, tags: ["Sin TACC"], kind: "Saladas", mealGroup: "comida" },
-  { title: "Bife con puré de papas", img: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&q=60&auto=format", time: 35, kcal: 610, protein: 38, carbs: 40, fat: 30, tags: ["Aprovechamiento"], kind: "Ocasiones especiales", mealGroup: "comida" },
-];
-
 export const SEED_QUICK_FOODS: Omit<QuickFood, "id">[] = [
   { title: "Café con leche y tostadas", kcal: 220, mealGroup: "desayuno_merienda" },
   { title: "Yogur con granola", kcal: 250, mealGroup: "desayuno_merienda" },

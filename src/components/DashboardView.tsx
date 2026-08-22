@@ -6,10 +6,6 @@ import {
   DAYS,
   MEALS,
   MEAL_KEY_TO_GROUP,
-  WEEKLY_KCAL_GOAL,
-  WEEKLY_PROTEIN_GOAL,
-  WEEKLY_CARBS_GOAL,
-  WEEKLY_FAT_GOAL,
   chipStyle,
   dayLabel,
   quickFoodMatchesMeal,
@@ -20,6 +16,7 @@ import type { MealKey, PlanEntry, Recipe } from "@/lib/types";
 
 interface Props {
   household: ReturnType<typeof useHousehold>;
+  isMobile: boolean;
 }
 
 interface ResolvedEntry {
@@ -32,7 +29,7 @@ interface ResolvedEntry {
   fat: number;
 }
 
-export default function DashboardView({ household }: Props) {
+export default function DashboardView({ household, isMobile }: Props) {
   const {
     settings,
     plan,
@@ -76,18 +73,8 @@ export default function DashboardView({ household }: Props) {
 
   const plannedList: ResolvedEntry[] = [];
   DAYS.forEach((day) => activeMeals.forEach((m) => { const r = resolveEntry(plan[day]?.[m.key]); if (r) plannedList.push(r); }));
-  const totalKcal = plannedList.reduce((a, r) => a + r.kcal, 0);
-  const totalProtein = plannedList.reduce((a, r) => a + r.protein, 0);
-  const totalCarbs = plannedList.reduce((a, r) => a + r.carbs, 0);
-  const totalFat = plannedList.reduce((a, r) => a + r.fat, 0);
   const totalSlots = DAYS.length * activeMeals.length;
   const weekProgressPct = totalSlots ? Math.round((plannedList.length / totalSlots) * 100) : 0;
-
-  const macroDefs = [
-    { label: "Proteínas", total: totalProtein, goal: WEEKLY_PROTEIN_GOAL },
-    { label: "Carbohidratos", total: totalCarbs, goal: WEEKLY_CARBS_GOAL },
-    { label: "Grasas", total: totalFat, goal: WEEKLY_FAT_GOAL },
-  ];
 
   const setDayServings = (day: string, n: number) => {
     updateSettings({ dayServings: { ...settings.dayServings, [day]: n } });
@@ -278,26 +265,6 @@ export default function DashboardView({ household }: Props) {
         })}
       </div>
 
-      <div style={{ marginTop: 24 }}>
-        <div style={{ fontSize: 11.5, color: "oklch(50% 0.01 90)", marginBottom: 4 }}>
-          {totalKcal} / {WEEKLY_KCAL_GOAL} kcal esta semana
-        </div>
-        {macroDefs.map((m) => {
-          const p = Math.min(100, Math.round((m.total / m.goal) * 100));
-          return (
-            <div key={m.label} style={{ marginBottom: 10 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", fontSize: 12.5, color: "oklch(50% 0.01 90)", marginBottom: 4 }}>
-                <span>{m.label}</span>
-                <span>{m.total}g / {m.goal}g</span>
-              </div>
-              <div style={{ height: 6, borderRadius: 999, background: "oklch(93% 0.005 90)" }}>
-                <div style={{ height: "100%", borderRadius: 999, width: `${p}%`, background: "oklch(45% 0.005 90)" }} />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
       {pickerSlot && (
         <div
           onClick={closePicker}
@@ -339,23 +306,27 @@ export default function DashboardView({ household }: Props) {
 
                 {pickerTab === "rapidas" ? (
                   <>
-                    <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+                    <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 8, marginBottom: 16 }}>
                       <input
                         value={quickTitle}
                         onChange={(e) => setQuickTitle(e.target.value)}
                         placeholder="Título"
                         style={{ flex: 2, minWidth: 0, padding: "10px 12px", borderRadius: 10, border: "1.5px solid oklch(90% 0.005 90)", fontSize: 13.5 }}
                       />
-                      <input
-                        value={quickKcal}
-                        onChange={(e) => setQuickKcal(e.target.value)}
-                        type="number"
-                        placeholder="Kcal"
-                        style={{ width: 72, flex: "none", padding: "10px 8px", borderRadius: 10, border: "1.5px solid oklch(90% 0.005 90)", fontSize: 13.5, textAlign: "center" }}
-                      />
-                      <button onClick={submitQuickAdd} style={{ flex: "none", border: "none", background: "oklch(20% 0 0)", color: "#fff", borderRadius: 10, padding: "0 14px", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontWeight: 700, fontSize: 13 }}>
-                        <Plus size={14} /> Agregar
-                      </button>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <input
+                          value={quickKcal}
+                          onChange={(e) => setQuickKcal(e.target.value)}
+                          type="number"
+                          placeholder="Kcal"
+                          style={isMobile
+                            ? { flex: 1, minWidth: 0, padding: "10px 8px", borderRadius: 10, border: "1.5px solid oklch(90% 0.005 90)", fontSize: 13.5, textAlign: "center" }
+                            : { width: 72, flex: "none", padding: "10px 8px", borderRadius: 10, border: "1.5px solid oklch(90% 0.005 90)", fontSize: 13.5, textAlign: "center" }}
+                        />
+                        <button onClick={submitQuickAdd} style={{ flex: "none", border: "none", background: "oklch(20% 0 0)", color: "#fff", borderRadius: 10, padding: "0 14px", cursor: "pointer", display: "flex", alignItems: "center", gap: 4, fontWeight: 700, fontSize: 13 }}>
+                          <Plus size={14} /> Agregar
+                        </button>
+                      </div>
                     </div>
                     {quickFoods.filter((f) => pickerSlot && quickFoodMatchesMeal(f, pickerSlot.mealKey)).map((f) => (
                       <div key={f.id} onClick={() => pickQuickFood(f.id)} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "10px 8px", borderRadius: 10, cursor: "pointer" }}>

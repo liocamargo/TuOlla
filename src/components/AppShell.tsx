@@ -187,7 +187,7 @@ export default function AppShell({ user, household, householdId, onLogout }: Pro
           background: "#fff",
         }}
       >
-        {screen === "dashboard" && <DashboardView household={household} />}
+        {screen === "dashboard" && <DashboardView household={household} isMobile={isMobile} />}
         {screen === "shopping" && <ShoppingView household={household} isMobile={isMobile} collapsed={navCollapsed} />}
         {screen === "recipes" && <RecipesView household={household} isMobile={isMobile} />}
         {screen === "account" && (
